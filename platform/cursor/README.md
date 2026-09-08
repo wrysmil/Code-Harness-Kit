@@ -8,7 +8,7 @@ Cursor 适配分两层：
 ## 投影后应具备
 
 - `.cursor/rules/ai-entry.mdc`、`cursor-subagent-routing.mdc`
-- `.agents/agents/<role>.md`（共享层 agent manifest → `core/orchestration/agents/`）
+- `.agents/agents/<role>.md`（共享层 agent manifest，Worker 角色 + 内嵌检查表）
 - `.agents/skills/` 能力副本；WU skill 偏好 → `core/orchestration/skill-preferences.md`
 - `.agents/skills/orchestration/SKILL.md`
 

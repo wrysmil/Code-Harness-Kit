@@ -43,8 +43,6 @@ required_kit_files=(
   "core/orchestration/skill-preferences.md"
   "core/orchestration/config.defaults.yaml"
   "core/orchestration/tracking/schema.md"
-  "core/orchestration/agents/leader.md"
-  "core/orchestration/agents/coder.md"
   "core/artifacts.md"
   "init/bootstrap.prompt.md"
   "init/onboarding-handoff.txt"
@@ -171,35 +169,34 @@ if [[ "$missing" -ne 0 ]]; then
   exit 1
 fi
 
-echo "==> Checking harness subagent projection shells"
+echo "==> Checking harness subagent manifests (.agents/agents/)"
 agent_errors=0
 agents_dir="$(kit_path .agents/agents)"
-core_orch_dir="$(kit_path core/orchestration/agents)"
-max_projection_lines=80
+max_projection_lines=400
 
-for projected in "$agents_dir"/*.md; do
-  [[ -f "$projected" ]] || continue
-  rel_projected="${projected#"$ROOT_DIR"/}"
-  rel_projected="${rel_projected#./}"
-  lines="$(wc -l < "$projected" | tr -d ' ')"
-  base="$(basename "$projected" .md)"
-  core_canonical="$core_orch_dir/${base}.md"
-  if [[ -f "$core_canonical" ]]; then
-    if ! grep -qE 'orchestration/agents/|core/orchestration/agents/' "$projected" 2>/dev/null; then
-      echo "missing orchestration/agents/ reference: $rel_projected" >&2
+if [[ -d "$agents_dir" ]]; then
+  for projected in "$agents_dir"/*.md; do
+    [[ -f "$projected" ]] || continue
+    rel_projected="${projected#"$ROOT_DIR"/}"
+    rel_projected="${rel_projected#./}"
+    lines="$(wc -l < "$projected" | tr -d ' ')"
+    if [[ "$lines" -gt "$max_projection_lines" ]]; then
+      echo "manifest exceeds ${max_projection_lines} lines ($lines): $rel_projected" >&2
       agent_errors=1
     fi
-    canon_lines="$(wc -l < "$core_canonical" | tr -d ' ')"
-    max_allowed=$(( canon_lines * 12 / 10 ))
-    if [[ "$lines" -gt "$max_allowed" ]]; then
-      echo "projection too fat ($lines > $max_allowed vs canonical $canon_lines): $rel_projected" >&2
+    if ! head -1 "$projected" | grep -q '^---$' 2>/dev/null; then
+      echo "manifest missing YAML frontmatter: $rel_projected" >&2
       agent_errors=1
     fi
-  elif [[ "$lines" -gt "$max_projection_lines" ]]; then
-    echo "projection exceeds ${max_projection_lines} lines ($lines): $rel_projected" >&2
+  done
+else
+  if [[ "$LAYOUT" == "source" ]]; then
+    echo "skip: .agents/agents/ not present (source layout)" >&2
+  else
+    echo "missing: .agents/agents/" >&2
     agent_errors=1
   fi
-done
+fi
 
 if [[ "$agent_errors" -ne 0 ]]; then
   exit 1
@@ -344,10 +341,10 @@ fi
 # 因此 closeout 段扫**两个**位置。
 #
 # 自残保护（gap #11 治本）：
-# harness-kit 仓库（marker = core/orchestration/agents/leader.md）—— ERROR 改 WARN，避免本仓
+# harness-kit 仓库（marker = core/harness.md）—— ERROR 改 WARN，避免本仓
 # closeout 示例**自残**（harness-check 在本仓库跑会扫到示例文件）。
 is_harness_kit_self=0
-if [[ -f "core/orchestration/agents/leader.md" ]]; then
+if [[ -f "core/harness.md" ]]; then
   is_harness_kit_self=1
 fi
 

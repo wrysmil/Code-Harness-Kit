@@ -21,7 +21,7 @@ description: Harness 代码审查：WU 轻量审查与 GROUP 尾盘集体审查�
 1. 声明 `Skills: requesting-code-review@<path> loaded`
 2. Load 本 skill
 3. 委派 **独立 `reviewer` 实例**（与所有 Coder/Implementer **不同实例**；readonly）
-4. Prompt 正文：`core/orchestration/agents/reviewer.md`；占位符见 `code-reviewer.md`
+4. Prompt 正文：`.agents/agents/reviewer.md`；占位符见 `code-reviewer.md`
 5. **Leader** 将集体审查返回 Write `artifact-templates/code-review.md` 路径；Reviewer **不** Write 文件
 
 **平台绑定：** 见 `platform/*/bindings.md`（SpawnWorker(reviewer)）。

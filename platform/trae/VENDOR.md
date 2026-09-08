@@ -17,10 +17,10 @@
 | --- | --- |
 | `platform-adapters.zh.md` | 平台适配参考 |
 | `dispatcher-workflow.md` | `core/orchestration/dispatcher-workflow.md` |
-| `agents/leader.md` | `core/orchestration/agents/leader.md` |
-| `agents/coder.md` | `core/orchestration/agents/coder.md` |
-| `agents/reviewer.md` | `core/orchestration/agents/reviewer.md` |
-| `agents/debugger.md` | `core/orchestration/agents/debugger.md` |
+| `agents/leader.md` | Leader 行为规范（投影至 `.trae/rules/leader.md`） |
+| `agents/coder.md` | `.agents/agents/coder.md` |
+| `agents/reviewer.md` | `.agents/agents/reviewer.md` |
+| `agents/debugger.md` | `.agents/agents/debugger.md` |
 | `tracking/schema.md` | `tracking/schema.md` |
 | `artifact-templates/dispatch-track.md` 等 | 新建（harness-kit 产物契约） |
 | `.trae/rules/ai-entry.md` | 自 `platform/cursor/.cursor/rules/ai-entry.mdc` 改编 |

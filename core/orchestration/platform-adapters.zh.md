@@ -49,7 +49,7 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 
 源模板：`harness-kit/.agents/`（bootstrap 投影到项目根 `.agents/`）。
 
-详细 prompt 与返回格式见各文件及 `orchestration/agents/`（Leader 参考）。
+详细 prompt 与返回格式见各 `.agents/agents/<role>.md` 文件。
 
 ### Task 内置类型（补充）
 

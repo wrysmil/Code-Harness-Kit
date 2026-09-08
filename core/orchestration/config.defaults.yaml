@@ -8,7 +8,7 @@ runtime:
 orchestration:
   dispatcher_doc: harness-kit/core/orchestration/dispatcher-workflow.md
   skill_preferences: harness-kit/core/orchestration/skill-preferences.md
-  agents: harness-kit/core/orchestration/agents/
+  agents: .agents/agents/
 
 artifacts:
   execution_logs: .ai-runtime-artifacts/execution-logs/

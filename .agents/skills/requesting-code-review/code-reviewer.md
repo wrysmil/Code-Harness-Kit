@@ -6,7 +6,7 @@
 
 ```text
 委派独立 reviewer 实例审查 <WU-id | GROUP batch>。
-遵循 harness-kit/core/orchestration/agents/reviewer.md。
+遵循 .agents/agents/reviewer.md。
 未参与此代码实现。Readonly。不修改文件。
 ```
 

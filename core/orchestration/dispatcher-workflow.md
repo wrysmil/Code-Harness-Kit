@@ -173,7 +173,7 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 
 ## 角色索引
 
-见 `agents/` 目录。平台 SpawnWorker 映射见 `platform/*/bindings.md`。
+见 `.agents/agents/` 目录。平台 SpawnWorker 映射见 `platform/<platform>/bindings.md`。
 
 ## Superpowers 衔接
 

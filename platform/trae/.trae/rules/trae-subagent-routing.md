@@ -42,11 +42,9 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 委派示例：通过 Trae Agent 模式委派给对应的 subagent role。
 
-详细 prompt 与返回格式：各 `.agents/agents/<role>.md`（薄壳）→ `core/orchestration/agents/<role>.md`（正文）。
+详细 prompt 与返回格式：各 `.agents/agents/<role>.md`（Worker + 内嵌检查表）。
 
-## Leader 要点
-
-完整职责、阶段链、汇报规范见 **`core/orchestration/agents/leader.md`**。此处仅列 Trae 硬约束：
+## Trae 硬约束（leader 行为总则见 `.trae/rules/leader.md`）
 
 1. 路由判定 → 声明 `「Harness：…」`；遵守 **阶段门禁**
 2. 需委派时：WORKTREE-INIT → 派发 WU；prompt 简练；`auto` 解析 SKILL 路径；无 `### Skills 使用` 不整合；并行 ≤3；维护 DISPATCH-TRACK

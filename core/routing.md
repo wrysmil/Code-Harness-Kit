@@ -151,7 +151,7 @@
 | 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** 委派 reviewer；并行 **③** Load `security-and-hardening` → 委派 security-auditor；按需 **④** Load `performance-optimization` → 委派 perf-auditor |
 | **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
 | 缺陷调查 | **①** Load `systematic-debugging` → **②** `source-driven-development`（STACK DETECTION）→ **③** `project.profile.md`；委派见适配器 `bindings.md` |
-| 信息调研 / 网页搜索 | 委派 web-investigator → `core/orchestration/agents/web-investigator.md`（见适配器 bindings） |
+| 信息调研 / 网页搜索 | 委派 web-investigator → `.agents/agents/web-investigator.md`（见适配器 bindings） |
 | Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | runbook 明示任务 | 按 routing.md 对应判定处理 |

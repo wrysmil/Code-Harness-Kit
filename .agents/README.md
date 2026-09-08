@@ -33,7 +33,7 @@
 
 ## 共享 Agent Manifests（`.agents/agents/`）
 
-薄壳文件，指向 `harness-kit/core/orchestration/agents/<role>.md`（正文）。
+由 Claude Code / Cursor / Trae 直接加载。Worker 角色 + 内嵌检查表的完整定义。Leader 行为规范见 `platform/<platform>/<rules>/leader.md`。
 
 | 文件 | 角色 |
 | --- | --- |
