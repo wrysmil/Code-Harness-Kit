@@ -133,16 +133,5 @@ created_at: 2026-05-14
 
 ## 参考资料索引
 
-以下参考资料统一存放在 `harness-kit/references/`（集中式，与 agent-skills 对齐），供各 skill 跨引用：
+**检查清单已内嵌到各 Agent 定义文件中**，无需外部引用。各 Agent 的 `.md` 文件包含完整的检查表。
 
-| 文件 | 用途 | 被引用的 skill |
-|------|------|---------------|
-| `harness-kit/references/definition-of-done.md` | 项目级完成定义（5 段 20+ 检查项） | `verification-before-completion`, `incremental-implementation`, `shipping-and-launch`, `planning-and-task-breakdown` |
-| `harness-kit/references/testing-patterns.md` | 通用测试模式（AAA、命名、Mock 层次、反模式） | `test-driven-development`, `debugging-and-error-recovery` |
-| `harness-kit/references/security-checklist.md` | Web 安全 + OWASP Top 10 + LLM Top 10 | `security-and-hardening`, `code-review-and-quality`, `shipping-and-launch` |
-| `harness-kit/references/performance-checklist.md` | Web 性能（CWV、前后端清单、测量命令） | `performance-optimization`, `code-review-and-quality`, `shipping-and-launch` |
-| `harness-kit/references/orchestration-patterns.md` | 5 种编排模式 + 4 种反模式 + 决策流 | `orchestration`, `doubt-driven-development` |
-| `harness-kit/references/observability-checklist.md` | 可观测性（RED/USE、日志/指标/追踪/告警） | `observability-and-instrumentation` |
-| `harness-kit/references/accessibility-checklist.md` | WCAG 2.1 AA 无障碍检查 | `frontend-ui-engineering`, `shipping-and-launch` |
-
-> **来源：** 以上文件内容来自 [agent-skills](https://github.com/addyosmani/agent-skills) 的 `references/` 目录，保持同步。

@@ -100,7 +100,7 @@ skills:
   orchestration:
     source: merged from claude-orchestration + cursor-orchestration + trae-orchestration
     upstream: harness-kit（三合一）
-    note: "平台无关编排。SpawnWorker 绑定见 adapters/<platform>/bindings.md。references/ 含 agent-skills orchestration-patterns.md"
+    note: "平台无关编排。SpawnWorker 绑定见 platform/<platform>/bindings.md。references/ 含 agent-skills orchestration-patterns.md"
 
   # ========================
   # agent-skills Reference 文件

@@ -52,7 +52,7 @@ if [[ -n "$reason" ]]; then
   cat >&2 <<EOF
 Harness 禁止 Claude Code 原生 ${reason}（plan 会落到 ~/.claude/plans/，绕开 .ai-runtime-artifacts/ 与 plan 门禁）。
 请：Load \`writing-plans\` skill → Write .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md（并行时另写同 stem *-dispatch.md）。
-详见 harness-kit/core/routing.md § 平台原生 plan 工具 与 adapters/claude/bindings.md。
+详见 harness-kit/core/routing.md § 平台原生 plan 工具 与 platform/claude/bindings.md。
 EOF
   exit 2
 fi

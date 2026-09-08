@@ -29,6 +29,6 @@
 
 - 编排 skill（`orchestration`）— 已在 `.agents/skills/`
 - 子 Agent manifest（coder / implementer / reviewer / …）— 已在 `.agents/agents/`
-- 入口文件（AGENTS.md / CLAUDE.md）— 在 `entrypoints/`
+- 入口文件（AGENTS.md）— 根目录，引用 `core/routing.md`
 
 这些都已经统一，无需再放到 extensions。

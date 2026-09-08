@@ -1,6 +1,6 @@
 # Harness 编排角色索引
 
-逻辑角色定义在 `agents/`；物理绑定见各平台 `adapters/*/bindings.md`。
+逻辑角色定义在 `agents/`；物理绑定见各平台 `platform/*/bindings.md`。
 
 | 能力 ID | agent_role | 正文 | 典型 wu_type |
 | --- | --- | --- | --- |

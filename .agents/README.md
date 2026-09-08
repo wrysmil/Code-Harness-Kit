@@ -49,9 +49,9 @@
 
 | 平台 | 目录 | 内容 |
 | --- | --- | --- |
-| Cursor | `adapters/cursor/.cursor/` | rules、hooks |
-| Claude Code | `adapters/claude/` | bindings、capability-matrix |
-| Trae | `adapters/trae/` | bindings、capability-matrix |
+| Cursor | `platform/cursor/.cursor/` | rules、hooks |
+| Claude Code | `platform/claude/` | bindings、capability-matrix |
+| Trae | `platform/trae/` | bindings、capability-matrix |
 
 ## 优先级
 

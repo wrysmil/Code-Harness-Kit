@@ -24,7 +24,7 @@ description: Harness 代码审查：WU 轻量审查与 GROUP 尾盘集体审查�
 4. Prompt 正文：`core/orchestration/agents/reviewer.md`；占位符见 `code-reviewer.md`
 5. **Leader** 将集体审查返回 Write `artifact-templates/code-review.md` 路径；Reviewer **不** Write 文件
 
-**平台绑定：** 见 `adapters/*/bindings.md`（SpawnWorker(reviewer)）。
+**平台绑定：** 见 `platform/*/bindings.md`（SpawnWorker(reviewer)）。
 
 **范围证据：** 优先 **文件列表 + diff 摘要**；worktree 批次可用 `{BASE_SHA}`/`{HEAD_SHA}`，非必须。
 

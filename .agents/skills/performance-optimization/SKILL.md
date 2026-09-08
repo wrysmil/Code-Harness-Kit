@@ -312,11 +312,6 @@ npx bundlesize --config bundlesize.config.json
 npx lhci autorun
 ```
 
-## See Also
-
-For detailed performance checklists, optimization commands, and anti-pattern reference, see `harness-kit/references/performance-checklist.md`.
-
-
 ## Common Rationalizations
 
 | Rationalization | Reality |

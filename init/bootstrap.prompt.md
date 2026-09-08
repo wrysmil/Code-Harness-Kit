@@ -6,14 +6,14 @@ skills:
 source:
   - harness-kit/README.md
   - harness-kit/init/onboarding-handoff.txt
-  - harness-kit/entrypoints/
-  - harness-kit/adapters/
+  - harness-kit/core/routing.md
+  - harness-kit/platform/
 created_at: 2026-05-14
 ---
 
 # Harness Bootstrap Prompt
 
-你正在把 Agent Harness 脚手架接入当前项目。`harness-kit/` 是源头，根目录入口和工具目录都是投影。
+你正在把 Agent Harness 脚手架接入当前项目。核心规则在 `harness-kit/core/routing.md`；根目录 `AGENTS.md` 是 Harness 覆盖层。
 
 ## 清理 harness-kit 源仓库残留 + 更新 .gitignore
 
@@ -45,17 +45,23 @@ bash harness-kit/scripts/harness-project.sh detect
 
 输出为 `cursor`、`claude`、`trae` 或 `unknown`。后续投影按检测结果执行。
 
-## 投影入口文件
+## 生成根目录入口文件
 
-从 `harness-kit/entrypoints/` 投影到项目根目录：
+在项目根目录创建/更新 `AGENTS.md`：
 
-- `harness-kit/entrypoints/AGENTS.md` -> `AGENTS.md`
-- `harness-kit/entrypoints/AGENTS.cursor-overlay.md` -> 保留在 harness-kit 内（Cursor 深读）
-- `harness-kit/entrypoints/CLAUDE.md` -> `CLAUDE.md`
+```markdown
+---
+name: AGENTS
+description: Agent Harness 入口
+---
 
-`harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md` 为 Claude Code **共享正文**（不单独投影到根目录）。
+# AGENTS.md
 
-如果目标文件已存在，先读取现有内容，只合并 Harness 入口，不删除项目已有约束。
+项目背景：{{PROJECT_BACKGROUND}}
+
+> 必读：`harness-kit/core/routing.md`（路由判定、阶段门禁、按判定加载）
+> AI 入口顺序：1. 本文件 → 2. `harness-kit/core/routing.md` → 3. 平台适配器入口
+
 
 ## 投影工具适配（自动化）
 
@@ -73,7 +79,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 
 ### 投影结构
 
-**Cursor 平台层：** `adapters/cursor/.cursor/` + `harness-kit/.agents/` -> `.cursor/`
+**Cursor 平台层：** `platform/cursor/.cursor/` + `harness-kit/.agents/` -> `.cursor/`
 
 ```
 .cursor/
@@ -94,7 +100,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
 ```
 
-**Trae 平台层：** `adapters/trae/.trae/` + `harness-kit/.agents/` -> `.trae/`
+**Trae 平台层：** `platform/trae/.trae/` + `harness-kit/.agents/` -> `.trae/`
 
 ```
 .trae/
@@ -197,8 +203,7 @@ bash harness-kit/scripts/install-ai-skills.sh
 
 用 `project.profile.md` 的「项目身份」与「技术栈」写成 2–4 句摘要，替换下列文件中的 `{{PROJECT_BACKGROUND}}`（勿删除 Harness 规则段落）：
 
-- 根目录 `CLAUDE.md`（若已投影）
-- `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`（共享正文，供 Claude Code 深读）
+- 根目录 `AGENTS.md`
 
 ## 验证
 

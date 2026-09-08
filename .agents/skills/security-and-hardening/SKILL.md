@@ -74,8 +74,6 @@ If you can't name the trust boundaries for a feature, you're not ready to secure
 
 ## OWASP Top 10 Prevention Patterns
 
-These are prevention patterns, not a ranking. For the 2021 ordering, see the quick-reference table in `harness-kit/references/security-checklist.md`.
-
 ### Injection (SQL, NoSQL, OS Command)
 
 ```typescript
@@ -417,9 +415,6 @@ container.textContent = await llm.reply(userMessage);
 - [ ] Secrets and other users' data kept out of prompts
 - [ ] Tool/agent permissions scoped; destructive actions require confirmation
 ```
-## See Also
-
-For detailed security checklists and pre-commit verification steps, see `harness-kit/references/security-checklist.md`.
 
 ## Common Rationalizations
 

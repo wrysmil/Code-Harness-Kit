@@ -50,23 +50,22 @@ Harness 采用**双层架构**，分离"AI 详细规则"与"平台入口文件"�
 │                   harness-kit/（脚手架仓库）                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  core/orchestration/  ← 深读层：详细规则（不投影）               │
-│  core/routing.md      ← 路由判定 + 阶段门禁                      │
+│  core/routing.md      ← 路由判定 + 阶段门禁 + references 索引                      │
 │  core/capabilities/   ← 抽象原语                                │
-│  adapters/            ← 平台适配（cursor / claude / trae）       │
-│  .agents/agents/      ← 投影层：subagent stub                   │
-│  entrypoints/         ← 入口文件模板                             │
+│  platform/            ← 平台适配（cursor / claude / trae）
+│  .agents/agents/      ← 共享 subagent stub
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 | 层级 | 路径 | 作用 | 迁移行为 |
 |------|------|------|----------|
-| **深读层** | `core/orchestration/`、`core/capabilities/` | AI 按需读取的详细规则 | 随 harness-kit 拉取，不投影 |
-| **投影层** | `entrypoints/` → 根目录 | 平台入口（精简） | 初始化时投影到项目根目录 |
+| **入口层** | `AGENTS.md`（根目录） | AI 入口覆盖层 | 业务项目根目录 |
+| **路由层** | `core/routing.md` | 核心路由 + references | 随 harness-kit 拉取 |
 
 **原则**：
-- 深读层与投影层**内容必须一致**；改 agent 时同步两边
-- 投影层文件仅含 front matter + 指针，保持精简
-- 深读层含详细 prompt、返回格式、禁止项
+- `core/routing.md` 是核心真相源，包含路由、阶段门禁、references 索引
+- 根目录 `AGENTS.md` 是 Harness 覆盖层，引用 routing.md
+- 平台适配器 `platform/` 提供平台特定绑定
 
 ## 平台适配机制
 
@@ -77,16 +76,16 @@ Harness 采用**双层架构**，分离"AI 详细规则"与"平台入口文件"�
                   │ 平台特定绑定
     ┌─────────────┼─────────────┬─────────────┐
     ▼             ▼             ▼             ▼
-adapters/     adapters/    adapters/    adapters/
+platform/     platform/    platform/    platform/
 cursor/       claude/      trae/        agents/  ← 共享层
 bindings.md   bindings.md  (骨架)       (stub)
 ```
 
 | 适配器 | 绑定内容 |
 |--------|----------|
-| `adapters/cursor/` | Cursor 编排、spawn、hooks |
-| `adapters/claude/` | Claude Code bindings、能力矩阵 |
-| `adapters/agents/` | 共享 subagent（所有平台共用） |
+| `platform/cursor/` | Cursor 编排、spawn、hooks |
+| `platform/claude/` | Claude Code bindings、能力矩阵 |
+| `platform/agents/` | 共享 subagent（所有平台共用） |
 
 **平台能力矩阵**：
 
@@ -124,16 +123,11 @@ harness-kit/
 │       ├── hooks/              # Hook 抽象
 │       └── mcp/                # MCP 模板
 │
-├── adapters/                   # 平台适配
+├── platform/                   # 平台适配
 │   ├── cursor/                 # Cursor binding
 │   ├── claude/                 # Claude Code binding
 │   ├── trae/                   # Trae 骨架
 │   └── agents/                 # 共享层（投影用）
-│
-├── entrypoints/                # 投影到根目录的模板
-│   ├── AGENTS.md
-│   ├── CLAUDE.md
-│   └── HARNESS-PLATFORM-ENTRY.md
 │
 ├── init/                       # 接入脚本 + 话术
 │   ├── bootstrap.prompt.md
@@ -142,12 +136,6 @@ harness-kit/
 ├── scripts/                    # 工具脚本
 │   ├── harness-project.sh     # 投影脚本
 │   └── install-ai-skills.sh   # 安装脚本
-│
-├── references/                 # 强制检查清单
-│   ├── definition-of-done.md
-│   ├── security-checklist.md
-│   ├── performance-checklist.md
-│   └── ...
 │
 ├── artifact-templates/         # 产物模板
 │   ├── spec.harness-overlay.md
@@ -328,7 +316,7 @@ GROUP 收尾 / Ship Gate 必须对照全部 7 个 reference，逐项给出 `pass
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
 0. 询问平台（Cursor / Claude Code / Trae）
 1. 清理 git 元数据，更新 .gitignore
-2. 从 entrypoints/ 投影根目录 AI 入口文件
+2. 创建/更新根目录 `AGENTS.md`（引用 `harness-kit/core/routing.md`）
 3. 运行 `bash harness-kit/scripts/harness-project.sh project`
 4. 创建 .ai-runtime-artifacts/ 及其子目录
 5. 读取并执行 project-profiler.prompt.md
@@ -364,11 +352,10 @@ GROUP 收尾 / Ship Gate 必须对照全部 7 个 reference，逐项给出 `pass
 | `core/routing.md` | 路由判定 + 阶段门禁 + Tier 分级（**必读**） |
 | `core/orchestration/dispatcher-workflow.md` | 派发 + 整合步骤 |
 | `core/orchestration/agents/leader.md` | Leader 详细 prompt |
-| `core/orchestration/agents/coder.md` | Coder 详细 prompt |
-| `adapters/claude/bindings.md` | Claude Code 平台绑定 |
-| `adapters/cursor/README.md` | Cursor 投影与编排 |
+| `core/orchestration/agents/coder.md` | Coder 详细 prompt（含内嵌检查表） |
+| `platform/claude/bindings.md` | Claude Code 平台绑定 |
+| `platform/cursor/README.md` | Cursor 投影与编排 |
 | `init/bootstrap.prompt.md` | 新项目接入详版 |
-| `references/definition-of-done.md` | 完成定义（强制检查） |
 
 ---
 
@@ -376,7 +363,7 @@ GROUP 收尾 / Ship Gate 必须对照全部 7 个 reference，逐项给出 `pass
 
 | 文档 | 说明 |
 |------|------|
-| `adapters/cursor/README.md` | Cursor 投影与编排 |
+| `platform/cursor/README.md` | Cursor 投影与编排 |
 | `core/orchestration/dispatcher-workflow.md` | 派发与整合步骤（AI 深读） |
 | `init/bootstrap.prompt.md` | 新项目接入详版 |
 | `core/artifacts.md` | 过程产物规范 |

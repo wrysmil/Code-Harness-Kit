@@ -73,10 +73,6 @@ required_kit_files=(
   "artifact-templates/progress.md"
   "artifact-templates/wu-checklist.md"
   "artifact-templates/research-report.md"
-  "entrypoints/AGENTS.md"
-  "entrypoints/HARNESS-PLATFORM-ENTRY.md"
-  "entrypoints/CLAUDE.md"
-  "entrypoints/AGENTS.cursor-overlay.md"
   "core/extensions/README.md"
   "core/extensions/hooks/README.md"
   "core/extensions/hooks/hooks.spec.yaml"
@@ -90,33 +86,13 @@ required_kit_files=(
   "core/extensions/mcp/mcp.servers.template.json"
   "core/orchestration/continuous-loop.md"
   "core/orchestration/claude-continuous-loop.md"
-  "adapters/cursor/.cursor/rules/ai-entry.mdc"
-  "adapters/cursor/.cursor/rules/cursor-subagent-routing.mdc"
+  "platform/cursor/.cursor/rules/ai-entry.mdc"
+  "platform/cursor/.cursor/rules/cursor-subagent-routing.mdc"
   ".agents/skills/test-driven-development/SKILL.md"
   ".agents/skills/verification-before-completion/SKILL.md"
   ".agents/skills/ui-ux-pro-max/SKILL.md"
   ".agents/skills/ui-ux-pro-max/scripts/search.py"
-  "scripts/sync-cursor-skills.sh"
-  "scripts/harness-project.sh"
-  "adapters/cursor/README.md"
-  "core/orchestration/platform-adapters.zh.md"
-  "adapters/cursor/.cursor/config.defaults.yaml"
-  "adapters/cursor/VENDOR.md"
-  "adapters/cursor/.cursor/CURSOR-PRECHECK.md"
-  "core/orchestration/context-budget.md"
-  "core/orchestration/model-routing.yaml"
-  "core/orchestration/runtime/plan-progress-sync.md"
-  ".agents/skills/orchestration/SKILL.md"
-  "adapters/cursor/bindings.md"
-  "adapters/cursor/capability-matrix.yaml"
-  "adapters/claude/README.md"
-  "adapters/claude/bindings.md"
-  "adapters/claude/capability-matrix.yaml"
-  ".agents/skills/orchestration/SKILL.md"
-  "adapters/trae/bindings.md"
-  "adapters/trae/capability-matrix.yaml"
   "scripts/install-ai-skills.sh"
-  "scripts/harness-init.sh"
   "scripts/harness-check.sh"
 )
 
@@ -275,8 +251,8 @@ else
     [[ -n "$cap_line" ]] && capability_ids+=("$cap_line")
   done < <(grep -E '^### [a-z0-9.-]+$' "$registry" | sed 's/^### //')
   for platform in cursor claude trae; do
-    matrix="$(kit_path "adapters/$platform/capability-matrix.yaml")"
-    bindings="$(kit_path "adapters/$platform/bindings.md")"
+    matrix="$(kit_path "platform/$platform/capability-matrix.yaml")"
+    bindings="$(kit_path "platform/$platform/bindings.md")"
     if [[ ! -f "$matrix" ]]; then
       echo "missing matrix: $matrix" >&2
       matrix_errors=1
@@ -400,8 +376,7 @@ fi
 # 因此 closeout 段扫**两个**位置。
 #
 # 自残保护（gap #11 治本）：
-# harness-kit 仓库（marker = core/orchestration/agents/leader.md，源仓库独有，
-# consumer 用 entrypoints 投影不复制 core/）—— ERROR 改 WARN，避免本仓库
+# harness-kit 仓库（marker = core/orchestration/agents/leader.md）—— ERROR 改 WARN，避免本仓
 # closeout 示例**自残**（harness-check 在本仓库跑会扫到示例文件）。
 is_harness_kit_self=0
 if [[ -f "core/orchestration/agents/leader.md" ]]; then
@@ -650,7 +625,6 @@ fi
 
 echo "==> Checking shell scripts"
 bash -n "$(kit_path scripts/install-ai-skills.sh)"
-bash -n "$(kit_path scripts/harness-init.sh)"
 bash -n "$(kit_path scripts/harness-check.sh)"
 bash -n "$(kit_path scripts/harness-project.sh)"
 

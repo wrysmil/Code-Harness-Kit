@@ -74,7 +74,7 @@ subagent_spawn: .agents/agents/<role>.md  # 共享层
 monitoring: 轮询后台 Task 与终端输出
 ```
 
-配置模板：`harness-kit/adapters/cursor/.cursor/config.defaults.yaml`
+配置模板：`harness-kit/platform/cursor/.cursor/config.defaults.yaml`
 
 ### Claude Code
 
@@ -160,8 +160,8 @@ monitoring: Trae 终端输出
 
 | 平台 | 预检文件 |
 | --- | --- |
-| **Cursor** | `adapters/cursor/.cursor/CURSOR-PRECHECK.md` |
-| **Claude Code** | `adapters/claude/README.md` § Hooks + 本文件「Claude 限制与缓解」表 |
-| **Trae** | `adapters/trae/README.md`（骨架） |
+| **Cursor** | `platform/cursor/.cursor/CURSOR-PRECHECK.md` |
+| **Claude Code** | `platform/claude/README.md` § Hooks + 本文件「Claude 限制与缓解」表 |
+| **Trae** | `platform/trae/README.md`（骨架） |
 
 通用 harness 文档验证见 `core/verification.md` 与 `scripts/harness-check.sh`。

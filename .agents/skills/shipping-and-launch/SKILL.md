@@ -263,13 +263,6 @@ Every deployment needs a rollback plan before it happens:
 - Redeploy previous version: < 5 minutes
 - Database rollback: < 15 minutes
 ```
-## See Also
-
-- For the project-wide Definition of Done that every change must clear before this checklist, see `harness-kit/references/definition-of-done.md`
-- For security pre-launch checks, see `harness-kit/references/security-checklist.md`
-- For performance pre-launch checklist, see `harness-kit/references/performance-checklist.md`
-- For accessibility verification before launch, see `harness-kit/references/accessibility-checklist.md`
-
 ## Common Rationalizations
 
 | Rationalization | Reality |

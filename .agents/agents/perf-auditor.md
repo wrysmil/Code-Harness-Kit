@@ -13,7 +13,6 @@ readonly: true
 
 Leader 所列路径 → **必 Load**；返回须 `### Skills 使用`。
 - 优先 Read `.agents/skills/performance-optimization/SKILL.md`
-- 优先 Read `.agents/skills/performance-optimization/references/performance-checklist.md`
 
 ## 审查范围
 

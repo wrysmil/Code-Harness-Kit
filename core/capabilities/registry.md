@@ -1,13 +1,13 @@
 # Harness 能力注册表（单一真相源）
 
-命名：`<domain>.<name>`，全小写，连字符分词。parity 审计见各 `adapters/*/capability-matrix.yaml`。
+命名：`<domain>.<name>`，全小写，连字符分词。parity 审计见各 `platform/*/capability-matrix.yaml`。
 
 ## 完整性校验
 
 新增 capability 时，必须同步更新：
 - 本文件（registry.md）
-- `adapters/cursor/capability-matrix.yaml`
-- `adapters/claude/capability-matrix.yaml`
+- `platform/cursor/capability-matrix.yaml`
+- `platform/claude/capability-matrix.yaml`
 
 校验命令：`grep -c "### " core/capabilities/registry.md` 应等于各 YAML 中 `capabilities:` 下的 key 数量。
 

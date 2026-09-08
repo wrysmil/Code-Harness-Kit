@@ -1,8 +1,8 @@
 # AGENTS.md（Harness 仓库根覆盖层）
 
 > 本文件是 **harness-kit 仓库根** 的 `AGENTS.md`。  
-> 详细入口与跨平台规则见 `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`。  
-> 本文件与 `harness-kit/entrypoints/AGENTS.md` 同源。
+> 详细入口与跨平台规则见 `harness-kit/core/routing.md`。  
+> AI 入口顺序：1. 本文件 → 2. `harness-kit/core/routing.md` → 3. 平台适配器入口。
 
 ## 仓库性质
 
@@ -11,9 +11,10 @@
 ## AI 入口（按序读取）
 
 1. 本文件（仓库根覆盖层）
-2. `harness-kit/entrypoints/HARNESS-PLATFORM-ENTRY.md`（跨平台共享入口）
-3. `harness-kit/core/routing.md`（路由判定 / 阶段门禁 / 按判定加载）
-4. `harness-kit/entrypoints/CLAUDE.md` 或 `.cursor/rules/ai-entry.mdc`（按平台）
+2. `harness-kit/core/routing.md`（路由判定 / 阶段门禁 / 按判定加载）
+3. `harness-kit/core/artifacts.md`（产物规范）
+4. `harness-kit/core/verification.md`（验证门禁）
+5. 平台适配器入口（`platform/claude/README.md` / `platform/cursor/README.md` / `platform/trae/README.md`）
 
 ## 强制声明
 
@@ -51,16 +52,7 @@
 
 ## 参考资料索引
 
-以下参考资料统一存放在 `harness-kit/references/`（集中式）。**不是"按需参考"，而是对应阶段路由的强制门禁。** Leader 进入路由时必须 Read 关联 references 并逐项对照执行（见 `routing.md` § 参考资料强制加载）。
+**检查清单已内嵌到各 Agent 定义文件中**，无需外部引用。各 Agent 的 `.md` 文件包含完整的检查表（性能反模式、日志规范、安全检查、完成定义等）。
 
-| 文件 | 用途 | 被引用的 skill |
-|------|------|---------------|
-| `harness-kit/references/definition-of-done.md` | 项目级完成定义（20+ 检查项） | `verification-before-completion`, `incremental-implementation`, `shipping-and-launch` |
-| `harness-kit/references/testing-patterns.md` | 测试模式（AAA、Mock 层次、反模式） | `test-driven-development`, `debugging-and-error-recovery` |
-| `harness-kit/references/security-checklist.md` | Web 安全 + OWASP/LLM Top 10 | `security-and-hardening`, `code-review-and-quality`, `shipping-and-launch` |
-| `harness-kit/references/performance-checklist.md` | Web 性能（CWV、前后端清单） | `performance-optimization`, `code-review-and-quality`, `shipping-and-launch` |
-| `harness-kit/references/orchestration-patterns.md` | 编排模式 + 反模式 + 决策流 | `orchestration`, `doubt-driven-development` |
-| `harness-kit/references/observability-checklist.md` | 可观测性（RED/USE、日志/指标/告警） | `observability-and-instrumentation` |
-| `harness-kit/references/accessibility-checklist.md` | WCAG 2.1 AA 无障碍检查 | `frontend-ui-engineering`, `shipping-and-launch` |
+**违反：** 未执行检查即声称完成 → 无效。
 
-**违反：** 未 Read references 即声称完成 → 无效；产物无 `### References 检查` → 退回。

@@ -292,10 +292,6 @@ function useToggleTask() {
 }
 ```
 
-## See Also
-
-For detailed accessibility requirements and testing tools, see `harness-kit/references/accessibility-checklist.md`.
-
 ## Common Rationalizations
 
 | Rationalization | Reality |

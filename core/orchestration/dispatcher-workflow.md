@@ -1,6 +1,6 @@
 # Dispatcher 工作流（平台无关）
 
-将已批准 plan 转为并行 worker 执行。物理绑定见 `adapters/<platform>/bindings.md`。
+将已批准 plan 转为并行 worker 执行。物理绑定见 `platform/<platform>/bindings.md`。
 
 **触发：** `core/routing.md` 判定「多 task 编码 / 并行实现」。
 
@@ -53,18 +53,9 @@ Step 6: 附加切片建议（incremental-implementation 三策略之一）
 Step 7: 打包为 WU Context Block → 随 WU 派发 prompt 传递
 ```
 
-### 强制 References 打包
+### 强制检查打包
 
-Leader 在派发前必须 Read 并打包以下 references（见 `core/routing.md` § 参考资料强制加载）：
-
-| 前提 | 必须打包的 references |
-| --- | --- |
-| 任何 WU（基线） | `harness-kit/references/orchestration-patterns.md`（反模式自检） |
-| 含测试 WU | `harness-kit/references/testing-patterns.md` |
-| 含 API/数据变更 WU | `harness-kit/references/security-checklist.md` |
-| 含 UI 变更 WU | `harness-kit/references/performance-checklist.md` + `accessibility-checklist.md` |
-
-**打包方式**：Leader Read reference → 摘取与 WU 相关的 checklist 条目（≤10 条）→ 注入 WU Context Block 的约束段。子 Agent 返回时须对照这些条目给出 `pass/fail/n/a`。
+Leader 在派发前须确保 WU Context Block 包含各 Agent 内嵌检查表的适用条目。子 Agent 返回时须对照检查表给出执行结果。
 
 ### 五级上下文层级
 
@@ -138,9 +129,9 @@ Leader 解析 `auto` → 抄 slug+路径入 prompt；无 `### Skills 使用` **�
 
 GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-collective-test.md` §4）：
 
-1. **A 集体测试** — Load `verification-before-completion`；cwd=`worktree_path`；Read `harness-kit/references/definition-of-done.md`（全量对照）；Write `.ai-runtime-artifacts/verifications/*-collective-test.md`（必须含 `### References 检查`）；FAIL → STOP
+1. **A 集体测试** — Load `verification-before-completion`；cwd=`worktree_path`；Write `.ai-runtime-artifacts/verifications/*-collective-test.md`（含检查表执行结果）；FAIL → STOP
 
-2. **B 多层并行审查** — 并行扇出 3 个审查 Agent（参考 agent-skills `orchestration-patterns.md` Pattern 3）：
+2. **B 多层并行审查** — 并行扇出 3 个审查 Agent：
 
    ```
    Leader 并行 SpawnWorker:
@@ -166,7 +157,7 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 
 3. **C [可选] Simplify Pass** — Reviewer 标记"过于复杂"时，Leader 启动 `code-simplifier`（`agent_role: code-simplifier, wu_type: simplify`）。Load `code-simplification`。在 worktree 内执行简化，保持测试不变。与功能变更分离 commit。
 
-4. **D 关闭** — execution-log 链接审查产物；Leader 汇总所有子 Agent 返回的 references 检查结果 → 补充 `harness-kit/references/observability-checklist.md` + `testing-patterns.md` 自检 → 写入 collective-test.md 的 `### References 检查`；APPROVE/SKIPPED + 测试 PASS + **全部 references PASS** 方可声称完成
+4. **D 关闭** — execution-log 链接审查产物；Leader 汇总所有子 Agent 返回的检查结果 → 补充自检 → 写入 collective-test.md；APPROVE/SKIPPED + 测试 PASS 方可声称完成
 
 ## 步骤 4：追踪
 
@@ -182,7 +173,7 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 
 ## 角色索引
 
-见 `roles.md`。平台 SpawnWorker 映射见 `adapters/*/bindings.md`。
+见 `roles.md`。平台 SpawnWorker 映射见 `platform/*/bindings.md`。
 
 ## Superpowers 衔接
 

@@ -38,7 +38,7 @@ bash harness-kit/scripts/harness-project.sh project
 
 ## 与 cursor 适配器的关系
 
-`adapters/cursor/.cursor/config.defaults.yaml` 可包含 MCP 相关默认配置（如 server 白名单）。`.mcp.json` 是项目级注册，`config.defaults.yaml` 是 Cursor UI 行为配置，两者职责分离。
+`platform/cursor/.cursor/config.defaults.yaml` 可包含 MCP 相关默认配置（如 server 白名单）。`.mcp.json` 是项目级注册，`config.defaults.yaml` 是 Cursor UI 行为配置，两者职责分离。
 
 ## 故障排查
 
