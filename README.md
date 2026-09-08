@@ -1,5 +1,13 @@
 # Harness Kit
 
+<p align="left">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="./.agents/agents/"><img src="https://img.shields.io/badge/Worker_Agents-10-blue.svg" alt="Worker Agents"></a>
+  <a href="./.agents/skills/"><img src="https://img.shields.io/badge/Skills-28-blue.svg" alt="Skills"></a>
+  <a href="./platform/"><img src="https://img.shields.io/badge/Platforms-3-green.svg" alt="Platforms"></a>
+  <a href="#"><img src="https://img.shields.io/badge/语言-中文-red.svg" alt="Language"></a>
+</p>
+
 **生产级 AI Agent 协同框架**：把项目规则、路由判定、阶段门禁、过程产物、集体测试与集体审查、双层适配与工具链打包成一套脚手架，让 LLM 像一支有纪律的工程团队一样交付软件。
 
 > **核心价值**：解决 LLM 代码生成"可靠性、一致性、长期可维护性"三大顽疾。Harness 像马具——用缰绳与鞍具把马力引到正确方向，而不是限制能力本身。
