@@ -40,15 +40,12 @@ required_kit_files=(
   "core/capabilities/registry.md"
   "core/capabilities/primitives.md"
   "core/orchestration/dispatcher-workflow.md"
-  "core/orchestration/roles.md"
   "core/orchestration/skill-preferences.md"
   "core/orchestration/config.defaults.yaml"
   "core/orchestration/tracking/schema.md"
   "core/orchestration/agents/leader.md"
   "core/orchestration/agents/coder.md"
   "core/artifacts.md"
-  "core/verification.md"
-  "core/runbooks.md"
   "init/bootstrap.prompt.md"
   "init/onboarding-handoff.txt"
   "init/project-profiler.prompt.md"
@@ -73,18 +70,6 @@ required_kit_files=(
   "artifact-templates/progress.md"
   "artifact-templates/wu-checklist.md"
   "artifact-templates/research-report.md"
-  "core/extensions/README.md"
-  "core/extensions/hooks/README.md"
-  "core/extensions/hooks/hooks.spec.yaml"
-  "core/extensions/hooks/content/session-init.md"
-  "core/extensions/hooks/content/subagent-stop.md"
-  "core/extensions/hooks/scripts/cursor/harness-session-init.sh"
-  "core/extensions/hooks/scripts/cursor/harness-subagent-stop.sh"
-  "core/extensions/hooks/scripts/claude/harness-session-init.sh"
-  "core/extensions/hooks/scripts/claude/harness-subagent-stop.sh"
-  "core/extensions/mcp/README.md"
-  "core/extensions/mcp/mcp.servers.template.json"
-  "core/orchestration/continuous-loop.md"
   "core/orchestration/claude-continuous-loop.md"
   "platform/cursor/.cursor/rules/ai-entry.mdc"
   "platform/cursor/.cursor/rules/cursor-subagent-routing.mdc"
@@ -168,22 +153,9 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     done
   fi
 
-  # Claude 平台层 hooks 检查（warn only；不阻塞）
+  # Claude 平台 hooks 检查（warn only；extensions 已移除，hooks 为可选增强）
   if [[ -d ".claude" ]]; then
-    claude_hook_warn=0
-    if [[ ! -f ".claude/hooks/harness-session-init.sh" ]] || [[ ! -f ".claude/hooks/harness-subagent-stop.sh" ]]; then
-      echo "warn: .claude/hooks/harness-*.sh 缺失；运行 bash harness-kit/scripts/harness-project.sh project --platform claude 重新投影" >&2
-      claude_hook_warn=1
-    elif [[ -f ".claude/settings.json" ]] && ! grep -q '"hooks"' ".claude/settings.json" 2>/dev/null; then
-      echo "warn: .claude/settings.json 未启用 hooks；将 .claude/settings.json.example 的 hooks 段合并到 .claude/settings.json 启用 harness-session-init / harness-subagent-stop（opt-in）" >&2
-      claude_hook_warn=1
-    elif [[ -f ".claude/settings.json" ]] && ! grep -q 'block-native-plan-mode' ".claude/settings.json" 2>/dev/null; then
-      echo "warn: .claude/settings.json 未启用 block-native-plan-mode PreToolUse 钩子；将示例 PreToolUse 段合并到 settings.json 阻断 EnterPlanMode/ExitPlanMode（见 core/routing.md § 平台原生 plan 工具）" >&2
-      claude_hook_warn=1
-    fi
-    if [[ "$claude_hook_warn" -eq 0 ]]; then
-      echo "ok: .claude/ hooks projection"
-    fi
+    echo "warn: hooks 扩展已从 core/extensions/ 移除；如需启用 session 提示注入，请手动配置 .claude/settings.json" >&2
   fi
 
   # 目录

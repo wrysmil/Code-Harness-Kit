@@ -93,86 +93,9 @@ project_shared() {
 project_hooks() {
   local target_root="${1:-.}"
   local platform="${2:-}"
-  local ext_root="$KIT_ROOT/core/extensions/hooks"
 
-  if [[ ! -d "$ext_root" ]] || [[ -z "$platform" ]]; then
-    return 0
-  fi
-
-  case "$platform" in
-    cursor)
-      mkdir -p "$target_root/.cursor/hooks/content"
-      cp "$ext_root/content/session-init.md"     "$target_root/.cursor/hooks/content/"
-      cp "$ext_root/content/subagent-stop.md"    "$target_root/.cursor/hooks/content/"
-      cp "$ext_root/scripts/cursor/harness-session-init.sh"     "$target_root/.cursor/hooks/"
-      cp "$ext_root/scripts/cursor/harness-subagent-stop.sh"    "$target_root/.cursor/hooks/"
-      chmod +x "$target_root/.cursor/hooks/harness-"*.sh 2>/dev/null || true
-
-      cat > "$target_root/.cursor/hooks.json.example" <<'EOF'
-{
-  "version": 1,
-  "hooks": {
-    "sessionStart": [
-      { "command": ".cursor/hooks/harness-session-init.sh" }
-    ],
-    "subagentStop": [
-      { "command": ".cursor/hooks/harness-subagent-stop.sh" }
-    ]
-  }
-}
-EOF
-      echo "   已投影 hooks 脚本 + content + hooks.json.example 到 .cursor/hooks/"
-      ;;
-
-    claude)
-      mkdir -p "$target_root/.claude/hooks/content"
-      cp "$ext_root/content/session-init.md"     "$target_root/.claude/hooks/content/"
-      cp "$ext_root/content/subagent-stop.md"    "$target_root/.claude/hooks/content/"
-      cp "$ext_root/content/block-native-plan-mode.md" "$target_root/.claude/hooks/content/" 2>/dev/null || true
-      cp "$ext_root/scripts/claude/harness-session-init.sh"     "$target_root/.claude/hooks/"
-      cp "$ext_root/scripts/claude/harness-subagent-stop.sh"    "$target_root/.claude/hooks/"
-      cp "$ext_root/scripts/claude/block-native-plan-mode.sh"   "$target_root/.claude/hooks/" 2>/dev/null || true
-      chmod +x "$target_root/.claude/hooks/harness-"*.sh 2>/dev/null || true
-      chmod +x "$target_root/.claude/hooks/block-native-plan-mode.sh" 2>/dev/null || true
-
-      cat > "$target_root/.claude/settings.json.example" <<'EOF'
-{
-  "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          { "type": "command", "command": ".claude/hooks/harness-session-init.sh" }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "*",
-        "hooks": [
-          { "type": "command", "command": ".claude/hooks/harness-subagent-stop.sh" }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "EnterPlanMode|ExitPlanMode",
-        "hooks": [
-          { "type": "command", "command": ".claude/hooks/block-native-plan-mode.sh" }
-        ]
-      }
-    ]
-  },
-  "permissions": {
-    "allow": [],
-    "deny": []
-  }
-}
-EOF
-      echo "   已投影 hooks 脚本 + content + settings.json.example 到 .claude/（含 PreToolUse 阻断原生 plan）"
-      ;;
-  esac
+  # extensions 已移除，hooks 为可选增强
+  echo "   hooks 扩展已移除；如需启用请手动配置平台 hooks"
 }
 
 project_platform_skills() {
@@ -213,20 +136,15 @@ project_platform_skills() {
 
 project_mcp() {
   local target_root="${1:-.}"
-  local mcp_template="$KIT_ROOT/core/extensions/mcp/mcp.servers.template.json"
   local target_mcp="$target_root/.mcp.json"
 
-  if [[ ! -f "$mcp_template" ]]; then
-    return 0
-  fi
-
+  # MCP 配置由用户自行管理，harness 不再提供模板
   if [[ -f "$target_mcp" ]]; then
-    echo "   .mcp.json 已存在，跳过（避免覆盖用户配置）"
+    echo "   .mcp.json 已存在"
     return 0
   fi
 
-  cp "$mcp_template" "$target_mcp"
-  echo "   已投影 .mcp.json（mcpServers: {}，按需编辑）"
+  echo "   .mcp.json 不存在（按需自行创建）"
 }
 
 project_cursor() {
@@ -265,10 +183,7 @@ project_cursor() {
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".cursor" "$force"
 
-  # hooks（从 core/extensions 投影；脚本 + content + config 示例，非用户文件，始终覆盖）
-  project_hooks "$target_root" "cursor"
-
-  echo "   已投影 $added 项到 $target_root/.cursor/（含 hooks 扩展），跳过 $skipped 项"
+  echo "   已投影 $added 项到 $target_root/.cursor/，跳过 $skipped 项"
 }
 
 project_claude() {
@@ -300,10 +215,7 @@ project_claude() {
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".claude" "$force"
 
-  # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
-  project_hooks "$target_root" "claude"
-
-  echo "   已投影 $added 项到 $target_root/.claude/rules/（+ hooks 扩展），跳过 $skipped 项"
+  echo "   已投影 $added 项到 $target_root/.claude/rules/，跳过 $skipped 项"
 }
 
 project_trae() {
@@ -311,7 +223,6 @@ project_trae() {
   local force="${2:-0}"
   local src="$ADAPTERS_DIR/trae"
   local trae_src="$src/.trae"
-  local ext_root="$ROOT_DIR/core/extensions/hooks"
   local added=0
   local skipped=0
 
@@ -344,31 +255,7 @@ project_trae() {
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".trae" "$force"
 
-  # hooks（从 core/extensions 投影；脚本 + content + settings.json.example）
-  if [[ -d "$ext_root" ]]; then
-    mkdir -p "$target_root/.trae/hooks/content"
-    cp "$ext_root/content/session-init.md"     "$target_root/.trae/hooks/content/"
-    cp "$ext_root/content/subagent-stop.md"   "$target_root/.trae/hooks/content/"
-    cp "$ext_root/scripts/trae/harness-session-init.sh"     "$target_root/.trae/hooks/"
-    cp "$ext_root/scripts/trae/harness-subagent-stop.sh"   "$target_root/.trae/hooks/"
-    chmod +x "$target_root/.trae/hooks/harness-"*.sh 2>/dev/null || true
-
-    cat > "$target_root/.trae/settings.json.example" <<'EOF'
-{
-  "hooks": {
-    "sessionStart": [
-      { "command": ".trae/hooks/harness-session-init.sh" }
-    ],
-    "subagentStop": [
-      { "command": ".trae/hooks/harness-subagent-stop.sh" }
-    ]
-  }
-}
-EOF
-    echo "   已投影 hooks 脚本 + content + settings.json.example 到 .trae/"
-  fi
-
-  echo "   已投影 $added 项到 $target_root/.trae/rules/（+ hooks 扩展），跳过 $skipped 项"
+  echo "   已投影 $added 项到 $target_root/.trae/rules/，跳过 $skipped 项"
 }
 
 # ─── 主入口 ─────────────────────────────────────────────────
@@ -453,9 +340,7 @@ case "$cmd" in
         echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK .cursor/rules/ai-entry.mdc" || echo "MISSING .cursor/rules/ai-entry.mdc")"
         _rules_count="$(ls "$target_dir/.cursor/rules/"*.mdc 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [rules]   共 ${_rules_count} 个 .mdc"
-        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
-        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
-        echo "    [hooks]   $(test -f "$target_dir/.cursor/hooks.json.example" && echo "OK hooks.json.example" || echo "MISSING hooks.json.example")"
+        echo "    [skills]  共 ${_skills_count} 个 skill"
         ;;
       claude)
         echo "==> ✅ Claude 平台层预期文件清单（缺失即投影失败）："
@@ -464,9 +349,8 @@ case "$cmd" in
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥1）"
         _skills_count="$(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
-        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
-        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
+        echo "    [skills]  共 ${_skills_count} 个 skill"
+        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK .claude/rules/ai-entry.md" || echo "MISSING .claude/rules/ai-entry.md")"
         ;;
       trae)
         echo "==> ✅ Trae 平台层预期文件清单（缺失即投影失败）："
@@ -476,24 +360,20 @@ case "$cmd" in
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥2）"
         _skills_count="$(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-session-init.sh" && echo "OK harness-session-init.sh" || echo "MISSING harness-session-init.sh")"
-        echo "    [hooks]   $(test -x "$target_dir/.trae/hooks/harness-subagent-stop.sh" && echo "OK harness-subagent-stop.sh" || echo "MISSING harness-subagent-stop.sh")"
-        echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK settings.json.example" || echo "MISSING settings.json.example")"
+        echo "    [skills]  共 ${_skills_count} 个 skill"
+        echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK .trae/rules/trae-subagent-routing.md" || echo "MISSING .trae/rules/trae-subagent-routing.md")"
         ;;
       all)
         echo "==> ✅ Cursor 平台层："
         echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK" || echo "MISSING") .cursor/rules/ai-entry.mdc"
         echo "    [skills]  $(ls -d "$target_dir/.cursor/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
-        echo "    [hooks]   $(test -x "$target_dir/.cursor/hooks/harness-session-init.sh" && echo "OK" || echo "MISSING") harness-session-init.sh"
         echo "==> ✅ Claude 平台层："
         echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK" || echo "MISSING") .claude/rules/ai-entry.md"
         echo "    [skills]  $(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
-        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK" || echo "MISSING") settings.json.example"
         echo "==> ✅ Trae 平台层："
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK" || echo "MISSING") .trae/rules/ai-entry.md"
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK" || echo "MISSING") .trae/rules/trae-subagent-routing.md"
         echo "    [skills]  $(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
-        echo "    [hooks]   $(test -f "$target_dir/.trae/settings.json.example" && echo "OK" || echo "MISSING") settings.json.example"
         ;;
     esac
 

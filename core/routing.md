@@ -39,7 +39,7 @@
 **根因与修复（用户在会话中触发时）：**
 
 - 若 agent 已走原生工具 → 立刻 `cat ~/.claude/plans/<name>.md >> .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`、补 Harness FM（`route: superpowers:writing-plans`、`skills_evidence`、`## Next`），然后从原 native 路径继续；不要把 plan 留在 `~/.claude/plans/`
-- 项目级 opt-in 强阻断：见 `core/extensions/hooks/` 下 `PreToolUse` 钩子（默认未启用；启用见 hooks README）
+- 项目级 opt-in 强阻断：在 `CLAUDE.md` 或 `AGENTS.md` 中添加禁止规则说明，或在用户触发时进行干预。
 
 
 
@@ -147,14 +147,14 @@
 | 需求澄清 / 方案设计 | **①** 先扫描 `.ai-runtime-artifacts/` 中已有相关产物（避免重复设计）→ **②** Load `source-driven-development`（STACK DETECTION：读 `package.json` 等 → Write `.ai-runtime-artifacts/stack/`）→ **③** Load `brainstorming` → **④** `artifacts.md` → **⑤** 澄清起步后，涉及模块时再读 `project.profile.md`、`context-map.md`。多 WU 并行时 **⑥** Load `api-and-interface-design` → Write `.ai-runtime-artifacts/contracts/`。**禁止**未 Load skill 前用 profile/扫代码代替 brainstorming。 |
 | 实施计划 | **①** 先扫描 `.ai-runtime-artifacts/specs/` 中相关方案 + `.ai-runtime-artifacts/plans/` 中已有计划 → **②** Load `writing-plans` → **③** `artifacts.md` → **④** `plan.harness-overlay.md`（FM + Next）；并行时 **⑤** 另写同 stem `*-dispatch.md`（`dispatch.harness-overlay.md`）。 |
 | 多 task 编码 / 并行实现 | **文档优先扫描** `.ai-runtime-artifacts/`（specs/plans/decisions/contracts/research）→ 编排调度 skill → `core/orchestration/dispatcher-workflow.md`；§0 WORKTREE-INIT → §0.5 ContextPack（上下文打包，含相关 artifacts）→ §1 执行图 → §2 SpawnWorker；`core/orchestration/skill-preferences.md`；具体绑定见适配器 `bindings.md` |
-| 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md`、`core/verification.md` |
+| 验证 / 跑命令 | **①** Load `verification-before-completion` → **②** `project.verification.md` |
 | 代码审查（尾盘/批次） | **①** Load `requesting-code-review` + `code-review-and-quality` → **②** 委派 reviewer；并行 **③** Load `security-and-hardening` → 委派 security-auditor；按需 **④** Load `performance-optimization` → 委派 perf-auditor |
 | **GROUP 收尾 / 批次交付 / 「收尾」「提测前检查」** | **①** `verification-before-completion` → `project.verification.md` → `artifact-templates/collective-test.md` **②** 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需）**③** `core/orchestration/dispatcher-workflow.md` § 步骤 3 **④** batch-closeout spec |
 | 缺陷调查 | **①** Load `systematic-debugging` → **②** `source-driven-development`（STACK DETECTION）→ **③** `project.profile.md`；委派见适配器 `bindings.md` |
 | 信息调研 / 网页搜索 | 委派 web-investigator → `core/orchestration/agents/web-investigator.md`（见适配器 bindings） |
-| Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` + `runbooks.md` § Git 协作 |
+| Git（提交 / 分支 / MR 等） | **`git-xywh` skill** + `project.git.md` |
 | 架构决策 | `artifacts.md` + `artifact-templates/decision.md` |
-| runbook 明示任务 | `runbooks.md` 对应节 |
+| runbook 明示任务 | 按 routing.md 对应判定处理 |
 | **发布上线 / Ship Gate（尾盘后）** | **①** Load `shipping-and-launch` → Pre-Launch Checklist → **②** Load `observability-and-instrumentation` → 埋点/告警/日志检查 → **③** Write `.ai-runtime-artifacts/reviews/YYYY-MM-DD-ship-check.md`（FM: route=orchestration.ship, artifact=ship-check） |
 | 文档审查 | **①** Load `document-review` → **②** 根据文档类型加载 `review-rules/*.md` |
 
@@ -218,7 +218,7 @@
 | 谁执行 Git | **Leader / 主 Agent**；`coder` / `implementer` 等子 Agent 默认不 commit/push |
 | 与默认 route 关系 | Git 任务在对应阶段**叠加** `git-xywh`（例如实现完成后的提交不替代 `verification-before-completion`） |
 | skill 未安装 | 说明缺失，按 `project.git.md` 与仓库已有配置（`.husky`、`commitlint`、CI）执行；运行 `bash harness-kit/scripts/install-ai-skills.sh` 检查路径 |
-| **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。步骤见 `harness-kit/core/runbooks.md` § Git 协作 |
+| **如何 invoke** | 有 Skill 工具 → 加载 **`git-xywh`**；否则 Read 本机 skill 文件（见 `project.git.md` § 如何调用）。 |
 
 **Harness 声明示例：** `「Harness：git-xywh + project.git.md」`（用户仅说「提交代码」时）
 

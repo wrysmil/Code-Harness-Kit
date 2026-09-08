@@ -13,7 +13,7 @@
 1. 本文件（仓库根覆盖层）
 2. `harness-kit/core/routing.md`（路由判定 / 阶段门禁 / 按判定加载）
 3. `harness-kit/core/artifacts.md`（产物规范）
-4. `harness-kit/core/verification.md`（验证门禁）
+4. `harness-kit/core/artifacts.md`（产物规范）
 5. 平台适配器入口（`platform/claude/README.md` / `platform/cursor/README.md` / `platform/trae/README.md`）
 
 ## 强制声明

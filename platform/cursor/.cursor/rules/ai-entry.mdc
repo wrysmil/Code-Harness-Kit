@@ -51,13 +51,13 @@ alwaysApply: true
 | --- | --- |
 | 设计 / spec | `brainstorming` skill → `core/artifacts.md`（勿用 `artifact-templates/spec.md` 作正文） |
 | 计划 | `writing-plans` skill → `artifacts.md` → `artifact-templates/plan.harness-overlay.md`；并行时 `dispatch.harness-overlay.md` |
-| 验证 / 跑命令 | `verification-before-completion` → `project.verification.md`、`core/verification.md` |
+| 验证 / 跑命令 | `verification-before-completion` → `project.verification.md` |
 | 尾盘 / GROUP 收尾 / 「提测前检查」 | `verification-before-completion` → `collective-test.md` → `requesting-code-review` → `code-review.md` → `core/orchestration/dispatcher-workflow.md` §3 |
 | 决策 | `artifacts.md` + `artifact-templates/decision.md` |
 | 多 task / 已批准 plan + 委派 | `cursor-orchestration` → `core/orchestration/dispatcher-workflow.md`（**硬触发**见 `routing.md` § WU 编排硬触发） |
 | Leader 直做 / Tier 1 | `verification-before-completion` → Write `verification-lite.md` |
 | 派发 WU（`wu_skills: auto`） | `core/orchestration/skill-preferences.md` |
-| Git | `git-xywh` + `project.git.md` + `core/runbooks.md` § Git 协作 |
+| Git | `git-xywh` + `project.git.md` |
 | 文档审查 | `document-review` skill → `artifact-templates/document-review.md` |
 | 改代码 / 验证（实现阶段） | `project.profile.md`、`context-map.md`（涉及模块时） |
 

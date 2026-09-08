@@ -31,7 +31,7 @@ Leader 与子 Agent 之间：派发、返回摘要、整合与追踪日志的正
 | Shell / 测试 / 构建 | Task `shell`（补充） |
 | CI 失败 | Task `ci-investigator`（补充） |
 | 项目规则 | `.cursor/rules/`、`AGENTS.md`、`harness-kit/core/` |
-| 生命周期钩子（可选） | `.cursor/hooks.json` |
+| 生命周期钩子（可选） | 用户自行配置 `.cursor/hooks.json` |
 
 ### 共享 Subagent（`.agents/agents/`）
 
@@ -83,7 +83,7 @@ max_parallel_agents: 3      # 同 Cursor；硬顶 5
 loop_mode: single-pass      # 默认；continuous 需显式 opt-in + HANDOFF（见 claude-continuous-loop.md）
 subagent_spawn: Task(subagent_type=generalPurpose) + .agents/agents/<role>.md  # 共享层
 monitoring: 全部状态落盘到 .ai-runtime-artifacts/，跨会话由 HANDOFF 接力
-hooks: opt-in（.claude/settings.json 合并 hooks 段；默认未启用）
+hooks: 用户自行配置（可选）
 ```
 
 ### Trae
@@ -119,7 +119,7 @@ monitoring: Trae 终端输出
 | 实现 / 审查 / 探查 / 调试 | **Trae Agent** + `.agents/agents/<role>.md` |
 | Shell / 测试 / 构建 | Trae Agent Task |
 | 项目规则 | `.trae/rules/`、`AGENTS.md`、`harness-kit/core/` |
-| 生命周期钩子 | Trae hooks 机制 |
+| 生命周期钩子 | 用户自行配置 |
 
 共享 skill（`.agents/skills/`）与平台 skill（`.trae/skills/`）：见 `core/orchestration/skill-preferences.md`。
 
@@ -133,7 +133,7 @@ monitoring: Trae 终端输出
 | --- | --- |
 | 无内置 cron | 后台 Task 每 2–3 分钟轮询；可用 `/loop` skill |
 | subagent 需项目级定义 | bootstrap 投影 `harness-*.md` 七套角色 |
-| 无平台原生模型路由 | 可选 `model-routing.yaml` |
+| 无平台原生模型路由 | 继承主 Agent model；如需手动指定由用户决定 |
 | 连续自治循环非原生 | `continuous_mode` opt-in；其它走 `HANDOFF.md` 链接多会话 |
 
 ### Claude Code
@@ -142,8 +142,8 @@ monitoring: Trae 终端输出
 | --- | --- |
 | 无内置连续循环 | HANDOFF + DISPATCH-TRACK 跨会话接力（见 `claude-continuous-loop.md`） |
 | 子 agent 仅 `generalPurpose` 一类 | `.agents/agents/<role>.md` 作 prompt 正文，由 prompt 区分角色 |
-| 原生 plan 工具会写 `~/.claude/plans/` 脱管 | `core/extensions/hooks/` 提供 `block-native-plan-mode` PreToolUse 钩子（opt-in） |
-| hooks 需手动合并 `settings.json` | `harness-project.sh project` 生成 `settings.json.example`；`harness-check.sh` 给出 WARN 提醒 |
+| 原生 plan 工具会写 `~/.claude/plans/` 脱管 | 在 `CLAUDE.md` / `AGENTS.md` 中添加禁止规则说明 |
+| hooks 需用户自行配置 | 手动在 `settings.json` 中配置（可选） |
 | 无独立 `shell` / `ci-investigator` task | 通用任务用 `generalPurpose`；CI 调查降级为 `generalPurpose readonly`（见 `capability-matrix.yaml`） |
 | 项目级 skill 需投影到 `.claude/skills/` | `harness-project.sh project --platform claude` 自动从共享层 mirror |
 
@@ -152,7 +152,7 @@ monitoring: Trae 终端输出
 | Trae 限制 | 缓解 |
 | --- | --- |
 | 平台适配器为骨架，能力未完全定义 | 走 `orchestration` skill；待平台演进后补 capability |
-| hooks 机制与 Cursor / Claude 不一致 | 共享 `core/extensions/hooks/content/` 内容，wrapper 由 `scripts/trae/` 单独写（占位） |
+| hooks 机制与 Cursor / Claude 不一致 | 用户自行配置（可选） |
 
 ---
 
@@ -164,4 +164,4 @@ monitoring: Trae 终端输出
 | **Claude Code** | `platform/claude/README.md` § Hooks + 本文件「Claude 限制与缓解」表 |
 | **Trae** | `platform/trae/README.md`（骨架） |
 
-通用 harness 文档验证见 `core/verification.md` 与 `scripts/harness-check.sh`。
+通用 harness 文档验证见 `scripts/harness-check.sh`。

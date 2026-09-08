@@ -83,7 +83,7 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 ## Git（Leader）
 
-见 **`harness-kit/core/routing.md` § Git 协作** 与 **`core/runbooks.md` § Git 协作**。子 Agent 默认不 commit/push。
+见 **`harness-kit/core/routing.md` § Git 协作**。子 Agent 默认不 commit/push。
 
 ## 禁止
 

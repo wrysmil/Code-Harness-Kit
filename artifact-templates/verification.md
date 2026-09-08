@@ -7,7 +7,7 @@ skills_evidence:
   - ~/.agents/skills/verification-before-completion/SKILL.md
 source:
   - AGENTS.md
-  - core/verification.md
+  - project.verification.md
 created_at: <YYYY-MM-DD>
 ---
 

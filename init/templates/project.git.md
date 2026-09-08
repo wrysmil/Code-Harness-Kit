@@ -38,7 +38,7 @@ org_skill: git-xywh
 | 无 Skill 工具 | Read `~/.cursor/skills/git-xywh/SKILL.md`（或 `~/.agents/skills/` 下同路径） |
 | 安装检查 | `bash harness-kit/scripts/install-ai-skills.sh` 会输出 `ok:` 或 `missing:` |
 
-完整步骤见 `harness-kit/core/runbooks.md` § Git 协作。
+详见 `routing.md` § Git 协作。
 
 ## AI 执行约束
 

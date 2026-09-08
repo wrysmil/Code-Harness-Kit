@@ -1,3 +1,4 @@
+
 # Harness Engineering
 
 本文件描述可迁移 Agent Harness 的通用架构。它不包含具体项目业务背景；项目业务画像放在 `harness-kit/project.profile.md`。
