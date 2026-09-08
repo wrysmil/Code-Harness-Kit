@@ -106,22 +106,16 @@ harness-kit/
 │   ├── harness.md               # 总契约
 │   ├── routing.md               # 路由判定 + 阶段门禁 + Tier 分级
 │   ├── artifacts.md            # 产物规范
-│   ├── verification.md          # 验证规范
 │   │
-│   ├── capabilities/            # 抽象原语
-│   │   ├── DetectPlatform.md   # 平台检测
-│   │   ├── SpawnWorker.md      # Worker 派生
-│   │   └── EmitHook.md         # Hook 机制
+│   ├── capabilities/            # 能力注册表
+│   │   ├── registry.md
+│   │   └── primitives.md
 │   │
-│   ├── orchestration/           # 编排核心（深读层）
-│   │   ├── dispatcher-workflow.md  # 派发 + 整合步骤
-│   │   ├── agents/                 # 详细 agent prompt
-│   │   ├── roles/                  # 角色定义
-│   │   └── tracking/               # 追踪 schema
-│   │
-│   └── extensions/             # 平台无关扩展
-│       ├── hooks/              # Hook 抽象
-│       └── mcp/                # MCP 模板
+│   ├── orchestration/           # 编排核心
+│   │   ├── dispatcher-workflow.md
+│   │   ├── agents/
+│   │   ├── runtime/
+│   │   └── tracking/
 │
 ├── platform/                   # 平台适配
 │   ├── cursor/                 # Cursor binding

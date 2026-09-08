@@ -153,11 +153,7 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     done
   fi
 
-  # Claude 平台 hooks 检查（warn only；extensions 已移除，hooks 为可选增强）
-  if [[ -d ".claude" ]]; then
-    echo "warn: hooks 扩展已从 core/extensions/ 移除；如需启用 session 提示注入，请手动配置 .claude/settings.json" >&2
-  fi
-
+  
   # 目录
   for dir in "${required_dirs[@]}"; do
     if [[ -d "$dir" ]]; then
