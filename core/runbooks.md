@@ -41,7 +41,7 @@
 ## Harness 迁移到新项目
 
 1. 将 `harness-kit/` 放入新项目。
-2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文（或运行 `bash harness-kit/scripts/harness-init.sh` 输出同一段话术）；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
+2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
 3. 人 review `project.profile.md` 与 `project.git.md` 中的推断项和待确认项。
 
 ---

@@ -38,7 +38,6 @@
 - `AGENTS.md`（Harness 覆盖层，直接引用 `core/routing.md` 等）
 - 适配器入口文件（见 `platform/*/README.md`）
 - `harness-kit/scripts/install-ai-skills.sh`
-- `harness-kit/scripts/harness-init.sh`
 - `harness-kit/scripts/harness-check.sh`
 
 这层负责让不同工具进入同一套 Harness。适配器目录从 `harness-kit/platform/` 投影；脚本直接在 `harness-kit/scripts/` 内执行，不投影到根目录。
@@ -46,7 +45,7 @@
 ## 新项目初始化顺序
 
 1. 将 `harness-kit/` 放入新项目。
-2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文（或 `bash harness-kit/scripts/harness-init.sh` 输出同一段话术）；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
+2. 对 AI 发送 **`harness-kit/init/onboarding-handoff.txt`** 全文；详版见 **`harness-kit/init/bootstrap.prompt.md`**。
 3. AI 生成或更新：
    - `harness-kit/project.profile.md`
    - `harness-kit/context-map.md`
