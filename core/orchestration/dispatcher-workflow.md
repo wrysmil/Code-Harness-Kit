@@ -112,7 +112,7 @@ GROUP-1（并行）:
 
 | 项 | 内容 |
 | --- | --- |
-| 身份 | `WU-<id>` + `wu_type` + `agent_role`。「身份」是**给子代理看的标签**,派发时由 Leader 在 prompt 首句写明;子代理实际加载由 `platform/<platform>/bindings.md` 按各平台原生方式执行。**不允许退通用子代理,不允许手写角色定义文件内容进 prompt** |
+| 身份 | `WU-<id>` + `wu_type` + `agent_role`；派发时在 prompt 首句写明，角色文件由平台子代理机制自动加载 |
 | 目标/Done | 各 1–3 句 |
 | 范围 | 允许文件；禁止项一句 |
 | Skills | slug → 路径（禁只写 `auto`） |
@@ -136,10 +136,6 @@ Leader 解析 `auto` → 抄 slug+路径入 prompt；无 `### Skills 使用` **�
 ✅ 正确（prompt 首句点明身份）：
   prompt: "你是 WU-01，wu_type=feature，agent_role=coder。任务：实现 X...
 ```
-
-> **要点**：prompt 不抄 `.claude/agents/<role>.md` 内容（checklists/返回格式等由平台子代理机制自己注入）；只写「这次具体做什么、落盘到哪、验收口径是什么」。平台走 `platform/<platform>/bindings.md` 的对应行。
-
-**门检（派发前逐句对照）：** 若 prompt 里出现"你是 <role> 子代理 / 先读 coder.md / 按 X 格式返回"——停，删掉，改传 role 名让平台加载。漏传导致回退通用子代理视为派发违规。
 
 **禁传 worker：** `brainstorming`、`writing-plans`、`orchestration`、`git-xywh`。
 
@@ -193,7 +189,7 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 
 ## 角色索引
 
-`agent_role` 与 `.claude/agents/<role>.md` 同名一一映射。派发时 Leader 在 prompt 首句写明 `WU-<id>`、`wu_type`、`agent_role`，**具体调用由 `platform/<platform>/bindings.md` 按各平台原生方式执行**（Claude `subagent_type` / Cursor `Use <role> subagent` / Trae Agent 模式），角色文件由平台自动加载，Leader 不读文件内联。reviewer/auditor 等 `readonly:true` 角色的「只读」靠 prompt 纪律而非平台门禁（`readonly` 不纹死 tools）。
+`agent_role` 与 `.claude/agents/<role>.md` 同名映射。派发走各平台原生 role 子代理（`platform/<platform>/bindings.md`），角色文件由平台自动加载。
 
 ## Superpowers 衔接
 
@@ -217,7 +213,6 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 - 有委派无 WORKTREE-INIT；无委派仍 INIT
 - Leader 自动 push
 - 跳过上下文打包直接派发（Worker 信息不足→幻觉或过载→失焦）
-- **Agent 派发退通用子代理** → 角色 checklists/完成定义/返回格式未加载，子代理照常产出但纪律全丢（`platform/<platform>/bindings.md` 已规定必须用原生 role 子代理）
-- **手写「你是 <role>、先读 `<role>.md`、按 `<role>` 格式返回」样板进 prompt** → 说明没有让平台子代理机制加载角色；改为传 role 名让平台自己注入
+- **派发退通用子代理 / 手写角色样板进 prompt** → 角色 checklists/完成定义/返回格式未加载，违反平台子代理机制
 - 尾盘审查只跑一个 reviewer，缺少安全审查维度
 - Leader 直做（Tier 1）不执行自上下文打包

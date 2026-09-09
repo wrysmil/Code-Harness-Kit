@@ -3,8 +3,7 @@
 | 原语 | Claude 绑定 |
 | --- | --- |
 | `DetectPlatform()` | CLAUDE.md 会话 + Skill 工具 → `claude` |
-| `SpawnWorker(role)` | **原生 role 子代理**（按 `agent_role` 名加载对应 `.claude/agents/<role>.md`）。Claude Code: `Agent({ subagent_type: "<role>" })`；Cursor: `Use <role> subagent`；Trae: Agent 模式。各平台具体形态见 `platform/<platform>/bindings.md`。**不手工读文件内联进 prompt**——只读 role 文件路径，由平台子代理机制自己注入。若某 role 文件缺失，才降级为读 `.agents/agents/<role>.md` 内联，并在 DISPATCH-TRACK 记 `agent_load: inline-fallback` |
-| `SpawnWorker(reviewer/security-auditor/perf-auditor)` | 同上，原生 role 子代理。`readonly:true` 但**平台子代理无法在工具层纹死只读**——只读约束靠「独立实例 + prompt 纪律」维持，执行时 Leader 须验证子代理未越权写文件 |
+| `SpawnWorker(role)` | `Agent({ subagent_type: "<role>" })`（`.claude/agents/<role>.md` 由平台自动加载）。`SpawnWorker(reviewer/…)` 同上，只读靠 prompt 纪律 |
 | `ParallelBatch` | 并行 Task（对齐 `dispatching-parallel-agents`）；不传 Leader 全历史 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
 | `StructuredAsk` | `AskUserQuestion` 工具（单选/多选 + preview） |
