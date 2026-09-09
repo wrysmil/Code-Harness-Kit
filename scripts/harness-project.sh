@@ -19,7 +19,7 @@ else
   exit 1
 fi
 
-ADAPTERS_DIR="$KIT_ROOT/adapters"
+ADAPTERS_DIR="$KIT_ROOT/platform"
 
 # ─── 平台检测 ───────────────────────────────────────────────
 
@@ -134,6 +134,37 @@ project_platform_skills() {
   fi
 }
 
+project_platform_agents() {
+  local target_root="$1"
+  local platform_dir="$2"
+  local force="${3:-0}"
+  local src="$KIT_ROOT/.agents/agents"
+  local added=0
+  local skipped=0
+
+  if [[ ! -d "$src" ]]; then
+    return 0
+  fi
+
+  # agents（共享层 → 平台层 mirror；让 Claude Code 的 Agent 工具能直接发现 Harness 角色）
+  mkdir -p "$target_root/$platform_dir/agents"
+  for f in "$src"/*.md; do
+    [[ -f "$f" ]] || continue
+    local name
+    name="$(basename "$f")"
+    if [[ "$force" != "1" && -f "$target_root/$platform_dir/agents/$name" ]]; then
+      skipped=$((skipped + 1))
+      continue
+    fi
+    cp "$f" "$target_root/$platform_dir/agents/"
+    added=$((added + 1))
+  done
+
+  if [[ "$added" -gt 0 || "$skipped" -gt 0 ]]; then
+    echo "   $platform_dir/agents: +$added 跳过 $skipped"
+  fi
+}
+
 project_mcp() {
   local target_root="${1:-.}"
   local target_mcp="$target_root/.mcp.json"
@@ -156,13 +187,6 @@ project_cursor() {
 
   echo "==> 投影 Cursor 平台层: .cursor/"
 
-  # 共享层迁移后的残留清理：旧版 cursor 适配器把 agents 放在 .cursor/agents/，
-  # 新版已统一到 .agents/agents/（共享层），这里一次性清掉。
-  if [[ -d "$target_root/.cursor/agents" ]]; then
-    rm -rf "$target_root/.cursor/agents"
-    echo "   已清理残留 .cursor/agents/（旧版 cursor 平台层 agents 已迁到共享层）"
-  fi
-
   # rules（用户可定制：默认 skip-if-exists，--force 覆盖）
   if [[ -d "$src/rules" ]]; then
     mkdir -p "$target_root/.cursor/rules"
@@ -183,6 +207,9 @@ project_cursor() {
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".cursor" "$force"
 
+  # agents（共享层 → 平台层 mirror；让 Cursor subagent 命令能直接发现 Harness 角色）
+  project_platform_agents "$target_root" ".cursor" "$force"
+
   echo "   已投影 $added 项到 $target_root/.cursor/，跳过 $skipped 项"
 }
 
@@ -202,7 +229,10 @@ project_claude() {
       [[ -f "$f" ]] || continue
       local name
       name="$(basename "$f")"
-      if [[ "$force" != "1" && -f "$target_root/.claude/rules/$name" ]]; then
+      local dst="$target_root/.claude/rules/$name"
+      # source layout 下 source 与 target 是同一文件，跳过（避免 cp: same file）
+      [[ "$f" -ef "$dst" ]] && continue
+      if [[ "$force" != "1" && -f "$dst" ]]; then
         echo "   skip: .claude/rules/$name（已存在，--force 覆盖）"
         skipped=$((skipped + 1))
         continue
@@ -214,6 +244,9 @@ project_claude() {
 
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".claude" "$force"
+
+  # agents（共享层 → 平台层 mirror；让 Claude Code 的 Agent 工具能直接发现 Harness 角色）
+  project_platform_agents "$target_root" ".claude" "$force"
 
   echo "   已投影 $added 项到 $target_root/.claude/rules/，跳过 $skipped 项"
 }
@@ -254,6 +287,9 @@ project_trae() {
 
   # skills（共享层 → 平台层 mirror）
   project_platform_skills "$target_root" ".trae" "$force"
+
+  # agents（共享层 → 平台层 mirror；让 Trae Agent 模式能直接发现 Harness 角色）
+  project_platform_agents "$target_root" ".trae" "$force"
 
   echo "   已投影 $added 项到 $target_root/.trae/rules/，跳过 $skipped 项"
 }
@@ -340,7 +376,10 @@ case "$cmd" in
         echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK .cursor/rules/ai-entry.mdc" || echo "MISSING .cursor/rules/ai-entry.mdc")"
         _rules_count="$(ls "$target_dir/.cursor/rules/"*.mdc 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [rules]   共 ${_rules_count} 个 .mdc"
+        _skills_count="$(ls -d "$target_dir/.cursor/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
+        _agents_count="$(ls "$target_dir/.cursor/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [agents]  共 ${_agents_count} 个 agent manifest（应 ≥11；让 Cursor subagent 命令能直接发现 Harness 角色）"
         ;;
       claude)
         echo "==> ✅ Claude 平台层预期文件清单（缺失即投影失败）："
@@ -349,8 +388,8 @@ case "$cmd" in
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥1）"
         _skills_count="$(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK .claude/rules/ai-entry.md" || echo "MISSING .claude/rules/ai-entry.md")"
+        _agents_count="$(ls "$target_dir/.claude/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [agents]  共 ${_agents_count} 个 agent manifest（应 ≥11；让 Claude Code Agent 工具能直接发现 Harness 角色）"
         ;;
       trae)
         echo "==> ✅ Trae 平台层预期文件清单（缺失即投影失败）："
@@ -360,20 +399,23 @@ case "$cmd" in
         echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥2）"
         _skills_count="$(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [skills]  共 ${_skills_count} 个 skill"
-        echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK .trae/rules/trae-subagent-routing.md" || echo "MISSING .trae/rules/trae-subagent-routing.md")"
+        _agents_count="$(ls "$target_dir/.trae/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')"
+        echo "    [agents]  共 ${_agents_count} 个 agent manifest（应 ≥11；让 Trae Agent 模式能直接发现 Harness 角色）"
         ;;
       all)
         echo "==> ✅ Cursor 平台层："
         echo "    [rules]   $(test -f "$target_dir/.cursor/rules/ai-entry.mdc" && echo "OK" || echo "MISSING") .cursor/rules/ai-entry.mdc"
         echo "    [skills]  $(ls -d "$target_dir/.cursor/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
+        echo "    [agents]  $(ls "$target_dir/.cursor/agents/"*.md 2>/dev/null | wc -l | tr -d ' ') 个 agent"
         echo "==> ✅ Claude 平台层："
         echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK" || echo "MISSING") .claude/rules/ai-entry.md"
         echo "    [skills]  $(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
+        echo "    [agents]  $(ls "$target_dir/.claude/agents/"*.md 2>/dev/null | wc -l | tr -d ' ') 个 agent"
         echo "==> ✅ Trae 平台层："
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK" || echo "MISSING") .trae/rules/ai-entry.md"
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK" || echo "MISSING") .trae/rules/trae-subagent-routing.md"
         echo "    [skills]  $(ls -d "$target_dir/.trae/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
+        echo "    [agents]  $(ls "$target_dir/.trae/agents/"*.md 2>/dev/null | wc -l | tr -d ' ') 个 agent"
         ;;
     esac
 

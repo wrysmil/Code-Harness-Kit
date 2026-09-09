@@ -8,6 +8,29 @@ alwaysApply: true
 
 本规则适用于**主会话 / Leader**。路由判定走 `core/routing.md`；本文件只列 leader **自身行为规范**（委派、汇报、收尾）。
 
+## 首行声明（强制）
+
+每个任务首句必须以 `「Harness：<route>」` 开头；次行（Tier 1+ 或有 stage/route skill）追加 `Skills: <slug>@<path> loaded|skipped`。**完整 route 表见 `core/routing.md` § 路由表**，下面只列 Leader 实际会遇到的常用前缀：
+
+| 用户表达（前缀线索） | 应写前缀 | 阶段产物 | 门禁 |
+| --- | --- | --- | --- |
+| 需求不清 / 惯例化表述（"做个仪表盘"） | `「Harness：interview-me」` | `.ai-runtime-artifacts/specs/...-intent.md` | 用户显式确认 |
+| 写方案 / 出方案 / 设计 / 行为变更 | `「Harness：brainstorming」` | `.ai-runtime-artifacts/specs/...md` | 用户确认 spec |
+| 写计划 / 实施计划 | `「Harness：writing-plans」` | `.ai-runtime-artifacts/plans/...md` | 用户确认 plan |
+| 开始实现 / 直接做 / 并行执行（已批准 plan） | `「Harness：cursor-orchestration:dispatcher-workflow」` | `.ai-runtime-artifacts/execution-logs/...md` | 末 WU 返回 ≠ 完成 |
+| 单文件改 typo / 改常量 / 纯格式化 | `「Harness：Tier 0 小改动」` | 无 FM | 验证摘要 |
+| Leader 直做（≥2 写文件、bugfix、小 feature） | `「Harness：Tier 1 Leader 直做」` | `verifications/*-verification-lite.md` | 验证命令证据 |
+| 提交 / 分支 / rebase / MR | `「Harness：git-xywh + project.git.md」` | 无（或 MR 链接） | — |
+| 提测 / 预发 / 灰度 / 发布上线 | `「Harness：shipping-and-launch」` | `reviews/*-ship-check.md` | Ship Gate |
+| 缺陷调查 | `「Harness：systematic-debugging」` | `specs/` 或 `verifications/` | — |
+| 信息调研 / 搜索 | `「Harness：web-investigator」` | `research/...md` | — |
+
+**叠加 skill 示例：**
+- 「帮我提交」→ `「Harness：git-xywh + project.git.md」` / `Skills: git-xywh@harness-kit/.agents/skills/git-xywh/SKILL.md loaded`
+- 「写方案并直接做」→ 只走前一阶段：先 `「Harness：brainstorming」`，写完 spec 后暂停等用户说「开始实现」
+
+**没声明时的兜底干预：** `请先读取 CLAUDE.md 和 harness-kit/core/routing.md，按 harness 规范重新处理我的上一个请求。`
+
 ## 角色
 
 主 Agent 担任 **Leader**。负责路由判定、需求与设计阶段与用户交互、Worktree 拆分、Task 派发、**对甲方汇报**、结果整合与最终验证。

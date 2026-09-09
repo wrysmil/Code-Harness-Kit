@@ -85,6 +85,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 .cursor/
 ├── rules/           ← ai-entry.mdc、cursor-subagent-routing.mdc
 ├── skills/          ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/          ← 从 harness-kit/.agents/agents/ 镜像（让 Cursor subagent 能直接发现 Harness 角色）
 ├── hooks/           ← session-init、subagent-track-reminder
 └── hooks.json.example
 ```
@@ -95,6 +96,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 .claude/
 ├── rules/                       ← ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
 ├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像（让 Claude Code Agent 工具能直接发现 Harness 角色）
 ├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
 │   └── content/                 ← 配套 content/*.md
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
@@ -106,6 +108,7 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 .trae/
 ├── rules/                       ← ai-entry.md、trae-subagent-routing.md
 ├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
+├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像（让 Trae Agent 模式能直接发现 Harness 角色）
 ├── hooks/                       ← session-init、subagent-stop（opt-in）
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
 ```
@@ -121,7 +124,10 @@ test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
 # 2) skills（Claude Code 自动发现 .claude/skills/）
 ls -d .claude/skills/*/ | wc -l
 
-# 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+# 3) agents（Claude Code Agent 工具按 .claude/agents/*.md frontmatter 发现 Harness 角色）
+ls .claude/agents/*.md | wc -l
+
+# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
 test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"
 test -x .claude/hooks/harness-subagent-stop.sh   && echo "OK: hooks/harness-subagent-stop.sh"
 test -f .claude/settings.json.example            && echo "OK: settings.json.example"
@@ -137,7 +143,10 @@ test -f .trae/rules/trae-subagent-routing.md    && echo "OK: rules/trae-subagent
 # 2) skills（Trae skill 目录）
 ls -d .trae/skills/*/ | wc -l
 
-# 3) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
+# 3) agents（Trae Agent 模式按 .trae/agents/*.md frontmatter 发现 Harness 角色）
+ls .trae/agents/*.md | wc -l
+
+# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
 test -x .trae/hooks/harness-session-init.sh      && echo "OK: hooks/harness-session-init.sh"
 test -x .trae/hooks/harness-subagent-stop.sh    && echo "OK: hooks/harness-subagent-stop.sh"
 test -f .trae/settings.json.example              && echo "OK: settings.json.example"
@@ -153,7 +162,10 @@ test -f .cursor/rules/cursor-subagent-routing.mdc && echo "OK: rules/cursor-suba
 # 2) skills
 ls -d .cursor/skills/*/ | wc -l
 
-# 3) hooks
+# 3) agents（Cursor subagent 按 .cursor/agents/*.md frontmatter 发现 Harness 角色）
+ls .cursor/agents/*.md | wc -l
+
+# 4) hooks
 test -f .cursor/hooks.json.example               && echo "OK: hooks.json.example"
 ```
 
