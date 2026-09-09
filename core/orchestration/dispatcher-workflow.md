@@ -90,7 +90,7 @@ GROUP-1（并行）:
 
 ## 步骤 2：`ParallelBatch` / `SpawnWorker`
 
-对 GROUP 内无未完成依赖的 WU，**并行** `SpawnWorker(agent_role, wu)`（文件不相交；≤ `max_parallel`，硬顶 5）。
+对 GROUP 内无未完成依赖的 WU，**并行** `SpawnWorker(agent_role, wu)`（文件不相交；≤ `max_parallel`，硬顶 5）。实现 = `Agent(subagent_type=<agent_role>)`，**必须显式传 subagent_type 映射到 `<role>`**——漏传会回退到通用子代理，`.claude/agents/<role>.md` 的检查表/完成定义/返回格式不加载。
 
 | agent_role | 说明 |
 | --- | --- |
@@ -112,7 +112,7 @@ GROUP-1（并行）:
 
 | 项 | 内容 |
 | --- | --- |
-| 身份 | `WU-<id>` + `agent_role` / `wu_type` + `agents/<role>.md` |
+| 身份 | `WU-<id>` + `wu_type` + `agent_role`。<agent_role> 直接映射为 `Agent(subagent_type=<role>)`，`.claude/agents/<role>.md` 由平台自动加载（checklists/完成定义/返回格式随加载注入）。**不读文件内联、不传 subagent_type 之外的通用后备** |
 | 目标/Done | 各 1–3 句 |
 | 范围 | 允许文件；禁止项一句 |
 | Skills | slug → 路径（禁只写 `auto`） |
@@ -174,7 +174,7 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 
 ## 角色索引
 
-见 `.agents/agents/` 目录。平台 SpawnWorker 映射见 `platform/<platform>/bindings.md`。
+`agent_role` 与 `.claude/agents/<role>.md` 同名一一映射（coder.md / implementer.md / reviewer.md / …）。派发走 `Agent(subagent_type=<role>)`，文件由平台自动加载，Leader **不**读文件内联。reviewer/auditor 等 `readonly:true` 角色的「只读」靠 prompt 纪律而非平台门禁（`readonly` 不纹死 tools）。`platform/claude/bindings.md` § SpawnWorker。
 
 ## Superpowers 衔接
 
@@ -198,5 +198,6 @@ GROUP 收尾（`docs/superpowers/specs/2026-05-28-batch-closeout-review-and-coll
 - 有委派无 WORKTREE-INIT；无委派仍 INIT
 - Leader 自动 push
 - 跳过上下文打包直接派发（Worker 信息不足→幻觉或过载→失焦）
+- **Agent 派发漏传 `subagent_type=<agent_role>`** → 回退通用子代理，角色 checklists/完成定义/返回格式未加载，子代理照常产出但纪律全丢（binding 已按原生 subagent_type 收紧）
 - 尾盘审查只跑一个 reviewer，缺少安全审查维度
 - Leader 直做（Tier 1）不执行自上下文打包

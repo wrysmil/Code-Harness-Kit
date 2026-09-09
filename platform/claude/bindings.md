@@ -3,14 +3,14 @@
 | 原语 | Claude 绑定 |
 | --- | --- |
 | `DetectPlatform()` | CLAUDE.md 会话 + Skill 工具 → `claude` |
-| `SpawnWorker(role)` | Task(subagent_type=generalPurpose) + `.agents/agents/<role>.md` 作 prompt 正文 |
-| `SpawnWorker(reviewer)` | 新 Task 实例 + readonly 约束（**prompt 级约束**；subagent 仍能用 Write 工具——通过"独立实例 + prompt 纪律"维持，**不**是平台门禁） |
+| `SpawnWorker(role)` | `Agent(subagent_type=<role>)` + `prompt`（WU Context Block）。**平台自动加载 `.claude/agents/<role>.md`**（frontmatter `name/model/readonly`），其 checklists/完成定义/返回格式由平台注入，随后与派发 prompt 合并。**不手动读文件内联进 prompt**——那依赖人工搬运，是史上反复漏装的脆弱路径；加载交给平台。若某 role 的 `.claude/agents/<role>.md` 缺失，才降级为读 `.agents/agents/<role>.md` 内联，并在 DISPATCH-TRACK 记 `agent_load: inline-fallback` |
+| `SpawnWorker(reviewer/security-auditor/perf-auditor)` | `Agent(subagent_type=<role>)`。这些角色 `readonly:true` 但**原生 subagent_type 无法在平台层纹死 tools 只读**（subagent 仍握有写工具）——只读约束靠「独立实例 + prompt 纪律」维持（见 `readonly` 字段语义），执行时须验证子代理未越权写文件 |
 | `ParallelBatch` | 并行 Task（对齐 `dispatching-parallel-agents`）；不传 Leader 全历史 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
 | `StructuredAsk` | `AskUserQuestion` 工具（单选/多选 + preview） |
 | `EmitHook` | `.claude/settings.json` hooks（可选，用户自行配置） |
 | `LoadSkill(slug)` | Read `.agents/skills/<slug>/SKILL.md`；或 `Skill("<slug>")` 若已注册 |
-| `LoadAgent(role)` | Read `.agents/agents/<role>.md` 作 Task prompt |
+| `LoadAgent(role)` | `Agent(subagent_type=<role>)`——`.claude/agents/<role>.md` 由平台自动加载合入 prompt；通常无需显式调用 |
 | `LoadCapability(orchestration.dispatch)` | `orchestration` skill → core dispatcher |
 
 **Claude Code 原生 plan 工具（必读）：**
