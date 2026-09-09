@@ -41,6 +41,9 @@ capabilities:
   roles.test-engineer:
     status: supported
     binding: "Trae Agent + .agents/agents/test-engineer.md"
+  roles.smoke-tester:
+    status: supported
+    binding: "Trae Agent + .agents/agents/smoke-tester.md"
   roles.explorer:
     status: supported
     binding: "Trae Agent readonly + .agents/agents/explorer.md"

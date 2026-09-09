@@ -90,6 +90,7 @@ required_deployed_shared=(
   ".agents/agents/explorer.md"
   ".agents/agents/debugger.md"
   ".agents/agents/test-engineer.md"
+  ".agents/agents/smoke-tester.md"
   ".agents/agents/web-investigator.md"
   ".agents/skills/orchestration/SKILL.md"
   ".agents/skills/orchestration/SKILL.md"

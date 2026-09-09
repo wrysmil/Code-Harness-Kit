@@ -41,6 +41,9 @@ capabilities:
   roles.test-engineer:
     status: supported
     binding: "Task + agents/test-engineer.md"
+  roles.smoke-tester:
+    status: supported
+    binding: "Task + agents/smoke-tester.md"
   roles.explorer:
     status: supported
     binding: "Task explore 或 generalPurpose readonly"

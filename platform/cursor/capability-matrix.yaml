@@ -40,6 +40,9 @@ capabilities:
   roles.test-engineer:
     status: supported
     binding: "test-engineer"
+  roles.smoke-tester:
+    status: supported
+    binding: "smoke-tester (agent-browser / chrome-devtools-mcp 二选一)"
   roles.explorer:
     status: supported
     binding: "explorer / Task explore"

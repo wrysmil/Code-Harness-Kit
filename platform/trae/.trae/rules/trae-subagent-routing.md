@@ -38,6 +38,7 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 | explorer | Trae Agent readonly + `.agents/agents/explorer.md` | 只读探查 |
 | debugger | Trae Agent + `.agents/agents/debugger.md` | 缺陷调查 |
 | test-engineer | Trae Agent + `.agents/agents/test-engineer.md` | 测试/E2E 资产 |
+| smoke-tester | Trae Agent + `.agents/agents/smoke-tester.md` | 提测前冒烟场景跑（不写测试代码） |
 | web-investigator | Trae Agent + `.agents/agents/web-investigator.md` | 信息调研/网页搜索 |
 
 委派示例：通过 Trae Agent 模式委派给对应的 subagent role。
@@ -63,7 +64,7 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 **委派 subagent（Tier 2+ 或单点）：**
 
-- 已批准 plan 中的 WU（代码 → `coder`；docs/chore/config → `implementer`；测试 / E2E → `test-engineer`）
+- 已批准 plan 中的 WU（代码 → `coder`；docs/chore/config → `implementer`；测试 / E2E → `test-engineer`；提测前冒烟 → `smoke-tester`）
 - 实现后的审查（→ `reviewer`，不同实例）
 - 跨 3+ 模块只读探索（→ `explorer`）
 - 缺陷调查（→ `debugger`）

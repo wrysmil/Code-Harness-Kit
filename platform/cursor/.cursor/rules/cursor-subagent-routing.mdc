@@ -65,7 +65,7 @@ Skills: <slug>@<path> loaded|skipped   # stage skill / Tier 1+ 必填
 
 **委派 subagent（Tier 2+ 或单点）：**
 
-- 已批准 plan 中的 WU（代码 → `coder`；docs/chore/config → `implementer`；测试 / E2E → `test-engineer`）
+- 已批准 plan 中的 WU（代码 → `coder`；docs/chore/config → `implementer`；测试 / E2E → `test-engineer`；提测前冒烟 → `smoke-tester`）
 - 实现后的审查（→ `reviewer`，不同实例）
 - 跨 3+ 模块只读探索（→ `explorer`）
 - 缺陷调查（→ `debugger`）

@@ -97,6 +97,7 @@ GROUP-1（并行）:
 | coder | 实现+单测+轻量审查+自检 |
 | implementer | docs/chore/config |
 | test-engineer | 测试/E2e 资产 |
+| smoke-tester | 提测前冒烟场景跑（agent-browser / chrome-devtools-mcp） |
 | web-investigator | 调研取证 |
 | explorer | 只读探查 |
 | debugger | 缺陷调查+根因修复 |

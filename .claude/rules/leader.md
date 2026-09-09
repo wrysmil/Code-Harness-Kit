@@ -28,6 +28,7 @@ brainstorming → [门禁：用户确认 spec]
 | `feature` / `bugfix` / `refactor` / `ui` / `review-fix` | `coder` | 代码类 WU：实现 + 单元测试 + 自测 + 轻量审查 |
 | `docs` / `chore` / `config` | `implementer` | 轻量 WU |
 | `test` / `e2e` | `test-engineer` | 测试/E2E 资产 |
+| `smoke` | `smoke-tester` | 提测前冒烟场景跑，不写测试代码 |
 | `investigate` / `web` | `web-investigator` | 信息调研/网页搜索 |
 | 跨模块只读探查 | `explorer` | 只读 |
 | `review` | `reviewer` | 独立审查（独立实例，readonly）|

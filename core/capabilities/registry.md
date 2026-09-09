@@ -106,6 +106,13 @@
 - **Forbidden:** 改生产业务逻辑（非测试辅助）
 - **Degraded:** 无
 
+### roles.smoke-tester
+
+- **Requires:** smoke WU
+- **Produces:** `.ai-runtime-artifacts/verifications/*-smoke-report.md` + `screenshots/`
+- **Forbidden:** 写测试代码、改业务实现、自选浏览器 skill
+- **Degraded:** 无（浏览器依赖属前置 preflight，由 Leader 校验）
+
 ### roles.explorer
 
 - **Requires:** 只读探查 WU

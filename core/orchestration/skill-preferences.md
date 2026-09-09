@@ -145,6 +145,7 @@ review-fix 场景：`receiving-code-review → test-driven-development → verif
 | code-simplifier | simplify, * | `code-simplification`, `verification-before-completion` | 降复杂度 + 验证 |
 | test-engineer | test | `test-driven-development`, `verification-before-completion` | 写测试 + 验证 |
 | test-engineer | e2e | `browser-testing-with-devtools`, `verification-before-completion` | 浏览器验收 |
+| smoke-tester | smoke | `agent-browser` 或 `browser-testing-with-devtools`（二选一，Leader 派发指定）+ `verification-before-completion` | 提测前冒烟场景跑 |
 | web-investigator | research, * | `agent-browser` | 浏览器自动化 |
 
 ---
@@ -172,7 +173,7 @@ review-fix 场景：`receiving-code-review → test-driven-development → verif
 | Verify | `test-driven-development` | 先写测试，再看失败，写最小代码 | WU |
 | Verify | `verification-before-completion` | 完成前必须有运行证据 | Leader + WU |
 | Verify | `systematic-debugging` | 先定位根因再修复，禁止猜测试错 | WU(debugger/explorer) |
-| Verify | `browser-testing-with-devtools` | Chrome DevTools 实时测试 | WU(test-engineer/debugger) |
+| Verify | `browser-testing-with-devtools` | Chrome DevTools 实时测试 | WU(test-engineer/debugger/smoke-tester) |
 | Verify | `receiving-code-review` | 按审查意见改代码 | WU(coder review-fix) |
 | Review | `requesting-code-review` | WU 轻量审查 + GROUP 集体审查 | WU(coder/reviewer) |
 | Review | `code-review-and-quality` | 五轴审查：正确性/可读性/架构/安全/性能 | WU(reviewer) |
@@ -183,7 +184,7 @@ review-fix 场景：`receiving-code-review → test-driven-development → verif
 | Ship | `shipping-and-launch` | Pre-launch Checklist + 回滚方案 | Leader |
 | Ship | `git-xywh` | 三主干、五类分支、Angular 提交 | Leader |
 | Ship | `github` | GitHub CLI（gh）交互 | Leader |
-| — | `agent-browser` | 浏览器自动化（Playwright） | WU(web-investigator) |
+| — | `agent-browser` | 浏览器自动化（Playwright） | WU(web-investigator/smoke-tester) |
 | — | `orchestration` | 多任务并行编排调度 | Leader |
 
 ---
@@ -207,6 +208,7 @@ review-fix 场景：`receiving-code-review → test-driven-development → verif
 | 代码简化 | WU(code-simplifier) | code-simplification → verification-before-completion |
 | 补测试 | WU(test-engineer) | test-driven-development → verification-before-completion |
 | E2E 验收 | WU(test-engineer e2e) | browser-testing-with-devtools → verification-before-completion |
+| 提测前冒烟 | WU(smoke-tester smoke) | agent-browser 或 browser-testing-with-devtools（Leader 指定）→ verification-before-completion |
 | 网页搜索/调研 | WU(web-investigator) | agent-browser |
 | 提交 / MR | Leader | git-xywh |
 | 发布 / 上线 | Leader | shipping-and-launch → observability-and-instrumentation |
@@ -220,9 +222,9 @@ review-fix 场景：`receiving-code-review → test-driven-development → verif
 
 | 字段 | 含义 |
 |------|------|
-| wu_type | feature \| bugfix \| ui \| chore \| refactor \| review-fix \| api \| docs \| config \| test \| e2e \| explore \| review \| simplify \| investigate \| ui-bug \| research |
+| wu_type | feature \| bugfix \| ui \| chore \| refactor \| review-fix | smoke \| api \| docs \| config \| test \| e2e \| explore \| review \| simplify \| investigate \| ui-bug \| research |
 | wu_skills | 逗号分隔 slug，或 `auto`（查本文档） |
-| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| security-auditor \| perf-auditor \| code-simplifier \| test-engineer \| web-investigator |
+| agent_role | coder \| implementer \| explorer \| debugger \| reviewer \| security-auditor \| perf-auditor \| code-simplifier \| test-engineer \| smoke-tester \| web-investigator |
 
 Leader 派发 WU 时：必须将解析出的 slug 写入 prompt，禁止只写 `auto`。子 Agent 返回时须包含 `### Skills 使用`。
 
