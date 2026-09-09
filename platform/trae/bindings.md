@@ -5,13 +5,7 @@
 | 原语 | Trae 绑定 |
 | --- | --- |
 | `DetectPlatform()` | Trae 工作区 → `trae` |
-| `SpawnWorker(coder)` | Trae Agent 模式 + `.agents/agents/coder.md` |
-| `SpawnWorker(implementer)` | Trae Agent 模式 + `.agents/agents/implementer.md` |
-| `SpawnWorker(reviewer)` | Trae Agent readonly + `.agents/agents/reviewer.md` |
-| `SpawnWorker(test-engineer)` | Trae Agent 模式 + `.agents/agents/test-engineer.md` |
-| `SpawnWorker(explorer)` | Trae Agent readonly + `.agents/agents/explorer.md` |
-| `SpawnWorker(debugger)` | Trae Agent 模式 + `.agents/agents/debugger.md` |
-| `SpawnWorker(web-investigator)` | Trae Agent 模式 + `.agents/agents/web-investigator.md` |
+| `SpawnWorker(role)` | Trae **Agent 模式**（原生 role 子代理；`.trae/agents/<role>.md` 由平台自动加载）。适用于 coder / implementer / reviewer / test-engineer / explorer / debugger / web-investigator / …。**不手工读 `.agents/agents/<role>.md` 内联进 prompt**——仅当 `.trae/agents/<role>.md` 缺失时才降级内联 |
 | `ParallelBatch` | Trae Agent 并行任务; max 3 |
 | `WorktreeInit` | 同 `scripts/harness-worktree.sh` / git worktree |
 | `StructuredAsk` | Trae structured Ask（通过 Task 工具） |
@@ -21,6 +15,8 @@
 | `LoadCapability(orchestration.dispatch)` | `orchestration` skill → core dispatcher |
 
 **SpawnWorker 委派 prompt 必含：** WU id、wu_type、agent_role、允许文件、禁止项、done criteria、worktree_path（若启用）、本 WU Skills、返回格式。
+
+**reviewer/explorer 等只读角色：** 原生 Agent 模式仍能写文件，`readonly` 靠「独立实例 + prompt 纪律」维持，派发时须验证未越权写（非平台门禁）。
 
 **降级记录：** matrix 为 `degraded` 时，DISPATCH-TRACK 写 `Detail: capability <id> degraded`。
 
