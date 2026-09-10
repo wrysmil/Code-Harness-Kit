@@ -152,7 +152,7 @@ if [[ "$LAYOUT" == "deployed" ]]; then
     done
   fi
 
-  
+
   # 目录
   for dir in "${required_dirs[@]}"; do
     if [[ -d "$dir" ]]; then
@@ -167,6 +167,39 @@ else
 fi
 
 if [[ "$missing" -ne 0 ]]; then
+  exit 1
+fi
+
+# Claude 平台层（源在 kit 根 .claude/；deployed 时投影到项目根 .claude/）
+# 必查 leader.md（会话自动注入）+ hooks 模板（block-native-plan-mode 是真门禁，opt-in 启用由 settings.json 决定）
+echo "==> Checking Claude platform layer (.claude/)"
+claude_errors=0
+if [[ "$LAYOUT" == "source" ]]; then
+  claude_root="$KIT_ROOT"
+elif [[ -d ".claude" ]]; then
+  claude_root="$ROOT_DIR"
+else
+  claude_root=""
+  echo "skip: .claude/ (not projected; Cursor-only?)"
+fi
+if [[ -n "$claude_root" ]]; then
+  if [[ -f "$claude_root/.claude/rules/leader.md" ]]; then
+    echo "ok: .claude/rules/leader.md"
+  else
+    echo "missing: .claude/rules/leader.md (Leader 行为规范；Claude 会话自动注入)" >&2
+    claude_errors=1
+  fi
+  for file in ".claude/hooks/block-native-plan-mode.sh" ".claude/settings.json.example"; do
+    if [[ -f "$claude_root/$file" ]]; then
+      echo "ok: $file"
+    else
+      echo "missing: $file (opt-in hook 模板，缺失即无法启用原生 plan 阻断)" >&2
+      claude_errors=1
+    fi
+  done
+fi
+
+if [[ "$claude_errors" -ne 0 ]]; then
   exit 1
 fi
 

@@ -248,6 +248,34 @@ project_claude() {
   # agents（共享层 → 平台层 mirror；让 Claude Code 的 Agent 工具能直接发现 Harness 角色）
   project_platform_agents "$target_root" ".claude" "$force"
 
+  # hooks（block-native-plan-mode.sh + content + settings.json.example）
+  # 仅投影模板；settings.json 由用户手动 cp，opt-in 启用
+  if [[ -d "$claude_src/hooks" ]]; then
+    mkdir -p "$target_root/.claude/hooks/content"
+    for f in "$claude_src/hooks/block-native-plan-mode.sh" \
+             "$claude_src/hooks/content/block-native-plan-mode.md"; do
+      [[ -f "$f" ]] || continue
+      local name
+      name="$(basename "$f")"
+      local dst_dir
+      [[ "$f" == *"/content/"* ]] && dst_dir="$target_root/.claude/hooks/content" || dst_dir="$target_root/.claude/hooks"
+      mkdir -p "$dst_dir"
+      [[ "$force" != "1" && -f "$dst_dir/$name" ]] && continue
+      cp "$f" "$dst_dir/"
+      [[ "$name" == *.sh ]] && chmod +x "$dst_dir/$name"
+      added=$((added + 1))
+    done
+    echo "   已投影 hooks 模板（block-native-plan-mode）到 $target_root/.claude/hooks/"
+  fi
+
+  # settings.json.example（仅投影模板，用户需手动 cp 以启用 hooks）
+  if [[ -f "$claude_src/settings.json.example" ]]; then
+    mkdir -p "$target_root/.claude"
+    [[ "$force" != "1" && -f "$target_root/.claude/settings.json.example" ]] || \
+      cp "$claude_src/settings.json.example" "$target_root/.claude/settings.json.example"
+    echo "   已投影 settings.json.example 到 $target_root/.claude/"
+  fi
+
   echo "   已投影 $added 项到 $target_root/.claude/rules/，跳过 $skipped 项"
 }
 
@@ -383,13 +411,15 @@ case "$cmd" in
         ;;
       claude)
         echo "==> ✅ Claude 平台层预期文件清单（缺失即投影失败）："
-        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK .claude/rules/ai-entry.md" || echo "MISSING .claude/rules/ai-entry.md")"
+        echo "    [rules]   $(test -f "$target_dir/.claude/rules/leader.md" && echo "OK .claude/rules/leader.md" || echo "MISSING .claude/rules/leader.md")"
         _rules_count="$(ls "$target_dir/.claude/rules/"*.md 2>/dev/null | wc -l | tr -d ' ')"
-        echo "    [rules]   共 ${_rules_count} 个 .md（应 ≥1）"
+        echo "    [rules]   共 ${_rules_count} 个 .md"
         _skills_count="$(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [skills]  共 ${_skills_count} 个 skill"
         _agents_count="$(ls "$target_dir/.claude/agents/"*.md 2>/dev/null | wc -l | tr -d ' ')"
         echo "    [agents]  共 ${_agents_count} 个 agent manifest（应 ≥11；让 Claude Code Agent 工具能直接发现 Harness 角色）"
+        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/block-native-plan-mode.sh" && echo "OK .claude/hooks/block-native-plan-mode.sh" || echo "MISSING .claude/hooks/block-native-plan-mode.sh")"
+        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" && echo "OK .claude/settings.json.example" || echo "MISSING .claude/settings.json.example")"
         ;;
       trae)
         echo "==> ✅ Trae 平台层预期文件清单（缺失即投影失败）："
@@ -408,9 +438,11 @@ case "$cmd" in
         echo "    [skills]  $(ls -d "$target_dir/.cursor/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
         echo "    [agents]  $(ls "$target_dir/.cursor/agents/"*.md 2>/dev/null | wc -l | tr -d ' ') 个 agent"
         echo "==> ✅ Claude 平台层："
-        echo "    [rules]   $(test -f "$target_dir/.claude/rules/ai-entry.md" && echo "OK" || echo "MISSING") .claude/rules/ai-entry.md"
+        echo "    [rules]   $(test -f "$target_dir/.claude/rules/leader.md" && echo "OK" || echo "MISSING") .claude/rules/leader.md"
         echo "    [skills]  $(ls -d "$target_dir/.claude/skills/"*/ 2>/dev/null | wc -l | tr -d ' ') 个 skill"
         echo "    [agents]  $(ls "$target_dir/.claude/agents/"*.md 2>/dev/null | wc -l | tr -d ' ') 个 agent"
+        echo "    [hooks]   $(test -x "$target_dir/.claude/hooks/block-native-plan-mode.sh" 2>/dev/null && echo "OK" || echo "MISSING") block-native-plan-mode.sh"
+        echo "    [hooks]   $(test -f "$target_dir/.claude/settings.json.example" 2>/dev/null && echo "OK" || echo "MISSING") settings.json.example"
         echo "==> ✅ Trae 平台层："
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/ai-entry.md" && echo "OK" || echo "MISSING") .trae/rules/ai-entry.md"
         echo "    [rules]   $(test -f "$target_dir/.trae/rules/trae-subagent-routing.md" && echo "OK" || echo "MISSING") .trae/rules/trae-subagent-routing.md"

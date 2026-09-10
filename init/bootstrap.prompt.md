@@ -83,34 +83,32 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 
 ```
 .cursor/
-├── rules/           ← ai-entry.mdc、cursor-subagent-routing.mdc
+├── rules/           ← ai-entry.mdc、leader.mdc、cursor-subagent-routing.mdc
 ├── skills/          ← 从 harness-kit/.agents/skills/ 镜像
-├── agents/          ← 从 harness-kit/.agents/agents/ 镜像（让 Cursor subagent 能直接发现 Harness 角色）
-├── hooks/           ← session-init、subagent-track-reminder
-└── hooks.json.example
+└── agents/          ← 从 harness-kit/.agents/agents/ 镜像（让 Cursor subagent 能直接发现 Harness 角色）
 ```
 
 **Claude 平台层：** `harness-kit/.claude/` + `harness-kit/.agents/` -> `.claude/`
 
 ```
 .claude/
-├── rules/                       ← ai-entry.md（强制声明、首行「Harness：…」、写文件纪律）
+├── rules/                       ← leader.md（Leader 行为规范：强制声明、委派表、汇报、禁止项）
 ├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
 ├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像（让 Claude Code Agent 工具能直接发现 Harness 角色）
-├── hooks/                       ← opt-in：harness-session-init.sh、harness-subagent-stop.sh、block-native-plan-mode.sh
+├── hooks/                       ← opt-in：block-native-plan-mode.sh（阻断原生 plan 工具）
 │   └── content/                 ← 配套 content/*.md
 └── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
 ```
+
+会话级硬规则（必读入口链、文件写入纪律、产物落盘、同轮禁止）不再由单一 `ai-entry.md` 承载：Claude Code 自动注入 `rules/leader.md`，平台无关规则见 `core/routing.md`（§ 文件写入（强制）、§ 同轮禁止、§ 平台原生 plan 工具），产物路径契约见 `core/artifacts.md`。
 
 **Trae 平台层：** `platform/trae/.trae/` + `harness-kit/.agents/` -> `.trae/`
 
 ```
 .trae/
-├── rules/                       ← ai-entry.md、trae-subagent-routing.md
+├── rules/                       ← ai-entry.md、leader.md、trae-subagent-routing.md
 ├── skills/                      ← 从 harness-kit/.agents/skills/ 镜像
-├── agents/                      ← 从 harness-kit/.agents/agents/ 镜像（让 Trae Agent 模式能直接发现 Harness 角色）
-├── hooks/                       ← session-init、subagent-stop（opt-in）
-└── settings.json.example        ← hooks 配置示例（默认不启用，需手动 cp）
+└── agents/                      ← 从 harness-kit/.agents/agents/ 镜像（让 Trae Agent 模式能直接发现 Harness 角色）
 ```
 
 ### 投影后验证
@@ -118,8 +116,8 @@ bash harness-kit/scripts/harness-project.sh project --platform cursor
 **Claude 平台层预期文件清单（必须全部出现，缺一即视为投影失败）：**
 
 ```bash
-# 1) rules（always-loaded；Claude Code 会话开始自动加载）
-test -f .claude/rules/ai-entry.md && echo "OK: rules/ai-entry.md"
+# 1) rules（always-loaded；Claude Code 会话开始自动加载 leader.md）
+test -f .claude/rules/leader.md && echo "OK: rules/leader.md"
 
 # 2) skills（Claude Code 自动发现 .claude/skills/）
 ls -d .claude/skills/*/ | wc -l
@@ -127,9 +125,8 @@ ls -d .claude/skills/*/ | wc -l
 # 3) agents（Claude Code Agent 工具按 .claude/agents/*.md frontmatter 发现 Harness 角色）
 ls .claude/agents/*.md | wc -l
 
-# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
-test -x .claude/hooks/harness-session-init.sh    && echo "OK: hooks/harness-session-init.sh"
-test -x .claude/hooks/harness-subagent-stop.sh   && echo "OK: hooks/harness-subagent-stop.sh"
+# 4) hooks（opt-in，脚本默认投影 block-native-plan-mode.sh；启用需手动 cp settings.json.example → settings.json）
+test -x .claude/hooks/block-native-plan-mode.sh  && echo "OK: hooks/block-native-plan-mode.sh"
 test -f .claude/settings.json.example            && echo "OK: settings.json.example"
 ```
 
@@ -145,11 +142,6 @@ ls -d .trae/skills/*/ | wc -l
 
 # 3) agents（Trae Agent 模式按 .trae/agents/*.md frontmatter 发现 Harness 角色）
 ls .trae/agents/*.md | wc -l
-
-# 4) hooks（opt-in，脚本默认投影；启用需手动 cp settings.json.example → settings.json）
-test -x .trae/hooks/harness-session-init.sh      && echo "OK: hooks/harness-session-init.sh"
-test -x .trae/hooks/harness-subagent-stop.sh    && echo "OK: hooks/harness-subagent-stop.sh"
-test -f .trae/settings.json.example              && echo "OK: settings.json.example"
 ```
 
 **Cursor 平台层预期文件清单：**
@@ -164,9 +156,6 @@ ls -d .cursor/skills/*/ | wc -l
 
 # 3) agents（Cursor subagent 按 .cursor/agents/*.md frontmatter 发现 Harness 角色）
 ls .cursor/agents/*.md | wc -l
-
-# 4) hooks
-test -f .cursor/hooks.json.example               && echo "OK: hooks.json.example"
 ```
 
 随后跑：

@@ -21,7 +21,7 @@
 
 **产物落盘（强制）：**
 
-所有 AI 过程产物必须写入 `.ai-runtime-artifacts/` 对应子目录。**禁止**写到 `docs/`、`项目根目录`、或其他位置。详见 `.claude/rules/ai-entry.md` § 产物落盘（强制）。
+所有 AI 过程产物必须写入 `.ai-runtime-artifacts/` 对应子目录。**禁止**写到 `docs/`、`项目根目录`、或其他位置。详见 `core/artifacts.md` § 目录。
 
 **委派 prompt 必含：** WU id、wu_type、agent_role、允许文件、禁止项、done criteria、worktree_path（若启用）、本 WU Skills、返回格式。
 

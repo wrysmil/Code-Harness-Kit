@@ -24,4 +24,6 @@ parity 全表：`capability-matrix.yaml`。绑定：`bindings.md`。
 
 ## Hooks
 
-Hooks 扩展已移除；如需 session 提示注入，请在 `.claude/settings.json` 中手动配置。
+仅保留 `block-native-plan-mode.sh`（PreToolUse，阻断原生 `EnterPlanMode` / `ExitPlanMode`，防止 plan 绕过 `.ai-runtime-artifacts/plans/` 落盘）。默认**不启用**，需手动 `cp .claude/settings.json.example .claude/settings.json`。
+
+原 `harness-session-init.sh` / `harness-subagent-stop.sh` 已移除：其注入内容现由 `.claude/rules/leader.md`（会话自动注入）与 `core/routing.md`（平台无关规则）承载，无需 hook 重复注入。

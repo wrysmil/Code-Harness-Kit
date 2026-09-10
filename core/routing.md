@@ -242,6 +242,13 @@
 - **子 Agent 协调：** 派发 prompt、整合反馈、`DISPATCH-TRACK` 与要求子 Agent 返回的正文使用**中文**。
 - **例外：** 代码标识符、文件路径、命令、API 名、固定段键名（如 `### Skills 使用`、`wu_status`）可保留英文；用户明确要求其他语言时从其要求。
 
+## 文件写入（强制）
+
+- 改仓库内文本（源码、配置、`.ai-runtime-artifacts/`）**只用** `Write` / `Edit`；改前先 `Read`
+- **Shell 仅用于** 测试、lint、构建、git、只读查询
+- **禁止** Shell 写文本（`Set-Content`、`Out-File`、`echo … >`、`type … >`、无 `encoding='utf-8'` 的 Python/Node 一行写文件）
+- 默认 **UTF-8 无 BOM**（含中文）
+
 ## 运行约束
 
 - **强制声明：** 首行 `「Harness：…」`；次行 `Skills:` 格式见 § 阶段指定 skill 必用（Tier 1+ 或 stage skill 时必填）
