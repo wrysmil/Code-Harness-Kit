@@ -112,7 +112,7 @@ GROUP-1（并行）:
 
 | 项 | 内容 |
 | --- | --- |
-| 身份 | `WU-<id>` + `wu_type` + `agent_role`；派发时在 prompt 首句写明，角色文件由平台子代理机制自动加载 |
+| WU 身份 | `WU-<id>` + `wu_type` + `agent_role`；派发时在 prompt 首句写明。点明的是 **WU 身份**，不是**角色人格** —— 禁止写「你是 Harness Coder」这类角色样板，角色文件由平台子代理机制自动加载 |
 | 目标/Done | 各 1–3 句 |
 | 范围 | 允许文件；禁止项一句 |
 | Skills | slug → 路径（禁只写 `auto`） |
@@ -133,7 +133,7 @@ Leader 解析 `auto` → 抄 slug+路径入 prompt；无 `### Skills 使用` **�
   Agent({ subagent_type: "reviewer", description: "WU-02", prompt: "审查 WU-01 变更，只读，输出见 spec..." })
   // Cursor 用 "Use coder subagent"，Trae 用 "Agent 模式 + coder role"，语义等价
 
-✅ 正确（prompt 首句点明身份）：
+✅ 正确（prompt 首句点明 **WU 身份**）：
   prompt: "你是 WU-01，wu_type=feature，agent_role=coder。任务：实现 X...
 ```
 
