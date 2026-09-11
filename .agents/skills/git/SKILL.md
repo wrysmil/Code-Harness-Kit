@@ -1,13 +1,12 @@
 ---
-name: git-xywh
-slug: git-xywh
+name: git
+slug: git
 version: 1.0.9
 description: "组织级 Git 工作流：三主干（main / test / develop）、五类临时分支（feature / task / temp / bugfix / test）、多环境隔离、Angular 提交与 MR 流程；并涵盖日常安全操作（合并、变基、冲突、恢复）。在以下情况使用：（1）任务涉及上述分支、提测线、热修或版本标签；（2）需要写符合规范的提交说明或走合并请求；（3）需要避免误操作受保护分支或污染历史。"
 changelog: 审查改造：slug 与 clawhub 统一、跨平台命令说明、workflow 与 SKILL 去重、密钥与子模块补充
 homepage: https://clawic.com/skills/git
 metadata: {"clawdbot":{"emoji":"📚","requires":{"bins":["git"]},"os":["linux","darwin","win32"]}}
 ---
-
 ## 何时使用
 
 当任务涉及本组织的 **`main` / `test` / `develop`**、**`feature` / `task` / `temp` / `bugfix` / `test/v*`** 分支、**合并请求**、**版本号与标签**、或需要**安全地**合并、变基、解决冲突、恢复历史时使用。本技能无状态，凡工作包含上述 Git 协作，默认应套用。
@@ -16,36 +15,36 @@ metadata: {"clawdbot":{"emoji":"📚","requires":{"bins":["git"]},"os":["linux",
 
 ## 必读约束（代理与成员）
 
-1. 不向 `main`、`develop` 直推个人开发结果 — 走 MR/PR。  
-2. 不在公共受保护分支上 `git push --force`；允许时个人分支用 `--force-with-lease`。  
-3. `main` / `develop` 协作回滚用 `git revert`，不用 `reset --hard` 改写已发布历史。  
-4. `bugfix/*` 从 `main` 拉出，且须合入 `main` 与 `develop`。  
+1. 不向 `main`、`develop` 直推个人开发结果 — 走 MR/PR。
+2. 不在公共受保护分支上 `git push --force`；允许时个人分支用 `--force-with-lease`。
+3. `main` / `develop` 协作回滚用 `git revert`，不用 `reset --hard` 改写已发布历史。
+4. `bugfix/*` 从 `main` 拉出，且须合入 `main` 与 `develop`。
 5. 含密钥或凭据的提交即使事后删除提交记录，仍可能泄露 — 须**轮换密钥**并按平台流程联系管理员清理历史（见 `workflow.md` §14）。
 
 ## 分支类型速判（决策树）
 
-- **生产紧急缺陷** → 从 `main` 建 `bugfix/*`，再分别合入 `main` 与 `develop`。  
-- **已冻结/提测的版本线** → `test/v*`，以修缺陷为主，通过后进 `main` 并回合 `develop`。  
-- **大模块、长周期、多子分支** → `feature/*`（自 `develop`）。  
-- **常规需求** → `task/*`（自 `develop`）。  
-- **短探索、试错** → `temp/*`（自 `develop`）；可废弃或转正为 feature/task。  
+- **生产紧急缺陷** → 从 `main` 建 `bugfix/*`，再分别合入 `main` 与 `develop`。
+- **已冻结/提测的版本线** → `test/v*`，以修缺陷为主，通过后进 `main` 并回合 `develop`。
+- **大模块、长周期、多子分支** → `feature/*`（自 `develop`）。
+- **常规需求** → `task/*`（自 `develop`）。
+- **短探索、试错** → `temp/*`（自 `develop`）；可废弃或转正为 feature/task。
 - 长期「测试环境集成分支」若团队命名为 `test`，以远端保护规则与发布流程为准，勿与提测线 `test/v*` 混淆。
 
 ## 速查
 
-| 主题 | 文件 |
-|-------|------|
-| **组织工作流（分支模型与合流顺序）** | `workflow.md` |
-| 常用命令（含每日/提测/热修片段） | `commands.md` |
-| 进阶操作 | `advanced.md` |
-| 分支陷阱（结合本模型） | `branching.md` |
-| 冲突处理 | `conflicts.md` |
-| 历史与恢复 | `history.md` |
-| 协作与受保护分支 | `collaboration.md` |
+| 主题                                       | 文件                 |
+| ------------------------------------------ | -------------------- |
+| **组织工作流（分支模型与合流顺序）** | `workflow.md`      |
+| 常用命令（含每日/提测/热修片段）           | `commands.md`      |
+| 进阶操作                                   | `advanced.md`      |
+| 分支陷阱（结合本模型）                     | `branching.md`     |
+| 冲突处理                                   | `conflicts.md`     |
+| 历史与恢复                                 | `history.md`       |
+| 协作与受保护分支                           | `collaboration.md` |
 
-| 易混辨析 | 说明 |
-|----------|------|
-| **`test` 主干 / `test/v*` 分支 / 提交类型 `test`** | 主干 `test` = 测试环境长期分支；`test/v2.4.0` 等 = 某次提测版本线；Angular 里 **`test`** 表示**测试代码/用例**的提交类型，三者语义不同。 |
+| 易混辨析                                                       | 说明                                                                                                                                                      |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`test` 主干 / `test/v*` 分支 / 提交类型 `test`** | 主干`test` = 测试环境长期分支；`test/v2.4.0` 等 = 某次提测版本线；Angular 里 **`test`** 表示**测试代码/用例**的提交类型，三者语义不同。 |
 
 ## 核心规则（组织）
 
