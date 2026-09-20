@@ -621,21 +621,6 @@ MIT License —— 商用、私有 fork、改名再发布都允许，唯一要�
 
 ---
 
-## 致谢
-
-本项目灵感来源于以下优秀开源项目与社区贡献：
-
-- [planning-with-files](https://github.com/OthmanAdi/planning-with-files) — Manus 风格的文件化规划工作流（task_plan.md / findings.md / progress.md）
-- [spec-kit](https://github.com/github/spec-kit) — Spec-Driven Development（SDD）方法论与模板
-- [everything-claude-code](https://github.com/affaan-m/everything-claude-code) — 完整的 hooks / rules / skills 配置体系
-- [superpowers](https://github.com/obra/superpowers) — 头脑风暴 / 系统调试 / TDD 铁律等核心工作流思想
-- [oh-my-claudecode](https://github.com/Yeachan-Heo/oh-my-claudecode) — Teams-first 多智能体编排框架
-- [Claude Code](https://claude.com/product/claude-code) / [Cursor](https://cursor.com) — AI 编程平台的物理能力边界
-
-本项目所有规则、模板、Agent 定义均为独立原创实现，基于上述项目的思想进行了重新设计与功能增强。
-
----
-
 ## 许可证
 
 MIT
