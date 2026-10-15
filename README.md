@@ -485,15 +485,26 @@ verification / orchestration / git-xywh 等）与 agents 全局可用，**无需
 cp harness-kit/init/templates/AGENTS.claude-entry.md <项目根>/AGENTS.md
 ```
 
-`.ai-runtime-artifacts/` 与四份 project.* 由 Agent 按需自建。Cursor/Trae 或未走 marketplace 的场景
-仍用下方「新项目接入」流程。superpowers 系列已随 plugin 自有化分发，不再需要
-`npx skills add obra/superpowers -g`。
+`.ai-runtime-artifacts/` 与四份 project.* 由 Agent 按需自建。superpowers 系列已随 plugin
+自有化分发，不再需要 `npx skills add obra/superpowers -g`。
+
+## Qoder CLI（双清单）
+
+本仓库同时带 `.qoder-plugin/plugin.json`（`skills:./skills/`、`rules:./core/`、`agents:[…]`），
+按 Qoder 插件格式打包。但需如实说明：
+
+- **Qoder 插件仅从官方市场 `qoder-plugins` 分发，无自助 `marketplace add`**。要让 Qoder 用户一键装，
+  须由 Qoder 官方打包上架；在此之前 `.qoder-plugin/plugin.json` 是**候选清单**，发布前应在装有真
+  Qoder CLI 的机器跑 `qoder plugin validate .` 确认字段被接受。
+- 无论插件是否上架，**Qoder 今天就能用的接入方式是项目根 `AGENTS.md`**（Qoder 自动加载），配合
+  submodule/目录拷贝携带 `harness-kit/`。瘦入口模板同上。
 
 ## 接入方式
 
 | 方式 | 适用场景 |
 |------|----------|
-| **Claude Code marketplace** | `/plugin marketplace add` 一行装，免投影（推荐） |
+| **Claude Code marketplace** | 真·Claude Code 用户，`.claude-plugin/` 一行装 |
+| **Qoder：AGENTS.md + submodule** | Qoder CLI 今天可用的方式（官方上架前） |
 | **Git Submodule** | 多项目共用，升级与业务提交分离 |
 | **目录拷贝** | 单项目快速接入 |
 
