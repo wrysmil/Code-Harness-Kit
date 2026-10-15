@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 PLATFORM=""
 
-SUPERPOWERS_SKILLS=(brainstorming writing-plans systematic-debugging test-driven-development verification-before-completion)
+# superpowers 系列现随 harness-kit plugin 分发，不再单独本机安装检查
 ORG_SKILLS=(git-xywh)
 
 usage() {
@@ -20,7 +20,6 @@ usage() {
 默认: 自动检测（harness-project.sh detect）
 
 环境变量:
-  STRICT_SUPERPOWERS=1   缺 superpowers skill 时退出码 2
   STRICT_ORG_SKILLS=1    缺 org skill（git-xywh）时退出码 2
 EOF
 }
@@ -67,16 +66,6 @@ check_skill_set() {
   [[ "$missing" -eq 0 ]] && return 0
 
   case "$set_name" in
-    superpowers)
-      cat <<'MSG' >&2
-
-Some superpowers skills are missing. Install via:
-  npx skills add obra/superpowers -g
-MSG
-      if [[ "${STRICT_SUPERPOWERS:-0}" == "1" ]]; then
-        exit 2
-      fi
-      ;;
     org)
       cat <<MSG >&2
 
@@ -97,19 +86,16 @@ MSG
 
 check_cursor() {
   echo "==> Checking skills (cursor path: ~/.cursor/skills/)"
-  check_skill_set superpowers "$HOME/.cursor/skills" "${SUPERPOWERS_SKILLS[@]}"
   check_skill_set org "$HOME/.cursor/skills" "${ORG_SKILLS[@]}"
 }
 
 check_claude() {
   echo "==> Checking skills (claude path: ~/.claude/skills/)"
-  check_skill_set superpowers "$HOME/.claude/skills" "${SUPERPOWERS_SKILLS[@]}"
   check_skill_set org "$HOME/.claude/skills" "${ORG_SKILLS[@]}"
 }
 
 check_trae() {
   echo "==> Checking skills (trae path: ~/.trae/skills/)"
-  check_skill_set superpowers "$HOME/.trae/skills" "${SUPERPOWERS_SKILLS[@]}"
   check_skill_set org "$HOME/.trae/skills" "${ORG_SKILLS[@]}"
 }
 
