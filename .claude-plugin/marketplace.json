@@ -1,0 +1,17 @@
+{
+  "name": "code-harness-kit",
+  "description": "Agentic scaffolding: routing, stage skills, multi-platform adapters. One-command marketplace install.",
+  "owner": {
+    "name": "wrysmil",
+    "url": "https://github.com/wrysmil"
+  },
+  "plugins": [
+    {
+      "name": "code-harness-kit",
+      "description": "Harness routing + vendored stage skills (brainstorming, writing-plans, TDD, debugging, verification, orchestration) and dev agents.",
+      "version": "0.1.0",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
