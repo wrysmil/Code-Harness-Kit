@@ -1,0 +1,7 @@
+{
+  "name": "code-harness-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Qoder/Claude dual-format plugin packaging of Code-Harness-Kit.",
+  "license": "MIT"
+}

@@ -1,0 +1,29 @@
+{
+  "name": "code-harness-kit",
+  "displayName": "Code-Harness Kit",
+  "version": "0.1.0",
+  "description": "Agentic scaffolding: routing gate, vendored stage skills (brainstorming, writing-plans, TDD, systematic-debugging, verification, orchestration), dev agents, and cross-platform adapters.",
+  "descriptionZh": "AI 协作脚手架：路由门禁、阶段 skill（方案设计/计划/TDD/系统化调试/完成前验证/编排）、开发子 Agent 与多平台适配层。",
+  "author": { "name": "wrysmil", "url": "https://github.com/wrysmil" },
+  "homepage": "https://github.com/wrysmil/Code-Harness-Kit",
+  "repository": "https://github.com/wrysmil/Code-Harness-Kit",
+  "license": "MIT",
+  "category": "Workflow",
+  "keywords": ["harness", "routing", "skills", "agents", "orchestration", "tdd", "brainstorming"],
+  "tags": ["workflow", "tdd", "code-review", "debugging", "skills"],
+  "skills": "./skills/",
+  "rules": "./core/",
+  "agents": [
+    "./agents/code-simplifier.md",
+    "./agents/coder.md",
+    "./agents/debugger.md",
+    "./agents/explorer.md",
+    "./agents/implementer.md",
+    "./agents/perf-auditor.md",
+    "./agents/reviewer.md",
+    "./agents/security-auditor.md",
+    "./agents/smoke-tester.md",
+    "./agents/test-engineer.md",
+    "./agents/web-investigator.md"
+  ]
+}
