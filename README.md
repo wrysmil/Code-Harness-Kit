@@ -2,8 +2,10 @@
 
 <p align="left">
   <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="./.agents/agents/"><img src="https://img.shields.io/badge/Worker_Agents-10-blue.svg" alt="Worker Agents"></a>
+  <a href="https://github.com/wrysmil/Code-Harness-Kit/stargazers"><img src="https://img.shields.io/github/stars/wrysmil/Code-Harness-Kit?style=flat-square&label=stars" alt="Stars"></a>
+  <a href="./.agents/agents/"><img src="https://img.shields.io/badge/Worker_Agents-11-blue.svg" alt="Worker Agents"></a>
   <a href="./.agents/skills/"><img src="https://img.shields.io/badge/Skills-28-blue.svg" alt="Skills"></a>
+  <a href="./.claude-plugin/"><img src="https://img.shields.io/badge/Plugin-Claude%2BQoder-green.svg" alt="Plugin installable"></a>
   <a href="./platform/"><img src="https://img.shields.io/badge/Platforms-3-green.svg" alt="Platforms"></a>
   <a href="#"><img src="https://img.shields.io/badge/语言-中文-red.svg" alt="Language"></a>
 </p>
@@ -19,6 +21,54 @@
 
 <img src="image/首页.png" alt="Code-Harness-Kit 架构概览" width="800"/>
 
+## 立即安装
+
+**Claude Code**（plugin marketplace，已验证可发现全部 skill/agent）：
+
+```text
+/plugin marketplace add wrysmil/Code-Harness-Kit
+/plugin install code-harness-kit
+```
+
+**Qoder CLI**（本地目录安装；官方市场上架前用此方式，需在普通终端跑）：
+
+```bash
+git clone https://github.com/wrysmil/Code-Harness-Kit harness-kit
+qodercli plugin install ./harness-kit --scope project
+```
+
+**Cursor / Trae / 不想装 plugin**：以 submodule 或目录拷贝携带 `harness-kit/`，项目根放一份 `AGENTS.md`（模板见 `init/templates/AGENTS.claude-entry.md`），再跑 `harness-kit/scripts/harness-project.sh project` 投影。详见下方[快速接入](#快速接入)。
+
+> 装后 `.ai-runtime-artifacts/` 与四份 `project.*` 由 Agent 按需自建，业务项目无需再走完整 7 步初始化。superpowers 系列已随本 plugin 自有化分发，不必再单独安装。
+
+## 怎么运作
+
+- **路由判定**：每个任务先按 `core/routing.md` 判 route 与 Tier，决定走哪个阶段 skill。
+- **阶段门禁**：spec → plan → 实现 → 验证 → 审查 分段暂停，需你确认才推进，不"一把梭哈"。
+- **自有 skills + agents**：28 个阶段/工程 skill（brainstorming、writing-plans、TDD、systematic-debugging、verification、orchestration、git-xywh…）+ 11 个协作 Agent（coder、reviewer、debugger…）。
+- **文档驱动**：过程产物统一落 `.ai-runtime-artifacts/`（specs/plans/reviews/verifications/…），跨会话可追溯。
+- **双层结构**：深读层 `.agents/`、`core/` 为单一真相源；投影层 `.claude/`、`.cursor/`、`.trae/` 由脚本生成。plugin 形态让 Claude Code / Qoder 免投影直接全局加载。
+
+## FAQ
+
+**还需要每个项目跑 7 步初始化吗？**
+Claude Code / Qoder 走 plugin 后不再需要投影；业务项目根只需一份瘦 `AGENTS.md`，其余按"按需自建"。Cursor/Trae 仍用投影脚本。
+
+**一定要装 plugin 吗？**
+不必。submodule/拷贝 + 项目根 `AGENTS.md` 同样可用——`AGENTS.md` 是跨平台即时生效的接入机制。
+
+**跟 obra/superpowers、ponytail 什么关系？**
+本仓库已内置（bundled）superpowers 系列阶段 skill 并自有化，许可见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)，装本 plugin 即得到它们，无需再单独装。ponytail 是独立的第三方 skill，**不含**在本包内。
+
+**支持哪些 agent？**
+Claude Code、Qoder CLI、Cursor、Trae。
+
+**开源协议？**
+[MIT](LICENSE)。
+
+---
+
+## 深入文档
 
 ## 目录
 
