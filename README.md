@@ -468,10 +468,32 @@ Leader 并行 SpawnWorker:
 6. 汇总检查结果与待确认项
 ```
 
+## Claude Code 一键安装（plugin marketplace）
+
+本仓库自带 `.claude-plugin/` 清单，可作为 Claude Code plugin marketplace 源一行安装：
+
+```text
+/plugin marketplace add wrysmil/Code-Harness-Kit
+/plugin install code-harness-kit
+```
+
+装后 harness 的 skills（brainstorming / writing-plans / TDD / systematic-debugging /
+verification / orchestration / git-xywh 等）与 agents 全局可用，**无需再跑投影脚本**。
+业务项目只需放一份瘦入口：
+
+```text
+cp harness-kit/init/templates/AGENTS.claude-entry.md <项目根>/AGENTS.md
+```
+
+`.ai-runtime-artifacts/` 与四份 project.* 由 Agent 按需自建。Cursor/Trae 或未走 marketplace 的场景
+仍用下方「新项目接入」流程。superpowers 系列已随 plugin 自有化分发，不再需要
+`npx skills add obra/superpowers -g`。
+
 ## 接入方式
 
 | 方式 | 适用场景 |
 |------|----------|
+| **Claude Code marketplace** | `/plugin marketplace add` 一行装，免投影（推荐） |
 | **Git Submodule** | 多项目共用，升级与业务提交分离 |
 | **目录拷贝** | 单项目快速接入 |
 
