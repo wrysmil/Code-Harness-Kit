@@ -48,7 +48,7 @@ YYYY-MM-DD-<topic>-<artifact>.md
 ```yaml
 ---
 artifact: implementation-plan
-route: superpowers:brainstorming -> superpowers:writing-plans
+route: brainstorming -> writing-plans
 skills:
   - brainstorming
   - writing-plans
