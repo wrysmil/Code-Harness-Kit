@@ -6,11 +6,11 @@
 
 - 默认 route 是强制基线。用户指定 skills 或工具时，默认理解为追加要求，不替代本文件的默认 route。
 - 只有当用户明确说“不要使用默认 skills / 只使用某个 skill / 禁用某个 route”时，才允许跳过默认 route，并必须在回复或产物 front matter 中说明原因。
-- 方案设计优先使用 `superpowers:brainstorming`；该阶段向用户提问时**优先**使用环境内 ask 类结构化工具（无则对话提问）。
+- 方案设计优先使用 `brainstorming`；该阶段向用户提问时**优先**使用环境内 ask 类结构化工具（无则对话提问）。
   - **需求不明确时**：在 brainstorming 之前先走 `interview-me`（agent-skills）。触发条件：缺少 who/why/success/constraint 中任一项，或需求使用惯例化表述（"做个仪表盘"而非具体描述）。详见 `core/orchestration/dispatcher-workflow.md` § Superpowers 衔接。
   - **方案设计前必执行 STACK DETECTION**：Load `source-driven-development`，读取 `package.json` / `go.mod` 等依赖文件，输出精确版本清单。产物写入 `.ai-runtime-artifacts/stack/YYYY-MM-DD-stack.md`。
   - **多 WU 并行前必定义接口契约**：Load `api-and-interface-design`，在 writing-plans 拆分 WU 之前识别 WU 间接口边界，定义端点签名/错误格式/分页约定。产物写入 `.ai-runtime-artifacts/contracts/YYYY-MM-DD-contract-<name>.md`。
-- 已批准设计后的实施计划使用 `superpowers:writing-plans`。
+- 已批准设计后的实施计划使用 `writing-plans`。
 - 多 task 编码、并行执行、复杂审查和验证修复：
   - **全平台**：`orchestration` → `core/orchestration/dispatcher-workflow.md`
 - **Tier 0** 单文件机械修改：Leader 直做，无 FM（见 § 任务 Tier）。
@@ -38,7 +38,7 @@
 
 **根因与修复（用户在会话中触发时）：**
 
-- 若 agent 已走原生工具 → 立刻 `cat ~/.claude/plans/<name>.md >> .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`、补 Harness FM（`route: superpowers:writing-plans`、`skills_evidence`、`## Next`），然后从原 native 路径继续；不要把 plan 留在 `~/.claude/plans/`
+- 若 agent 已走原生工具 → 立刻 `cat ~/.claude/plans/<name>.md >> .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`、补 Harness FM（`route: writing-plans`、`skills_evidence`、`## Next`），然后从原 native 路径继续；不要把 plan 留在 `~/.claude/plans/`
 - 项目级 opt-in 强阻断：在 `CLAUDE.md` 或 `AGENTS.md` 中添加禁止规则说明，或在用户触发时进行干预。
 
 
@@ -54,7 +54,7 @@
 | “只用 X / 不要用默认 skill / 禁用 Y” | 按用户排除项执行，并记录跳过默认 route 的原因 |
 | 用户指定 skill 与默认 route 冲突 | 先说明冲突，再选择满足用户强约束的最小 route |
 
-示例：用户要求“按 writing-style 写文章并发飞书”，默认 route 仍应是 `superpowers:brainstorming -> writing-style -> lark-doc`，而不是只执行 `writing-style -> lark-doc`。
+示例：用户要求“按 writing-style 写文章并发飞书”，默认 route 仍应是 `brainstorming -> writing-style -> lark-doc`，而不是只执行 `writing-style -> lark-doc`。
 
 ## 用户话术 → Route
 
@@ -114,15 +114,15 @@
 | 任务类型 | Capability | Cursor | Claude | 产物 |
 | --- | --- | --- | --- | --- |
 | 需求澄清（按需前置） | `skills.stage-load` | Load `interview-me` → Write intent | 同左 | `.ai-runtime-artifacts/specs/YYYY-MM-DD-<topic>-intent.md` |
-| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `source-driven-development`（STACK）+ `superpowers:brainstorming` → `api-and-interface-design`（多 WU 时） | 同左 | `.ai-runtime-artifacts/specs/` + `stack/` + `contracts/` |
-| 实施计划 | `skills.stage-load` + plan | `superpowers:writing-plans` | 同左 | `.ai-runtime-artifacts/plans/` |
+| 需求澄清 / 方案设计 / 行为变更 | `skills.stage-load` + design | `source-driven-development`（STACK）+ `brainstorming` → `api-and-interface-design`（多 WU 时） | 同左 | `.ai-runtime-artifacts/specs/` + `stack/` + `contracts/` |
+| 实施计划 | `skills.stage-load` + plan | `writing-plans` | 同左 | `.ai-runtime-artifacts/plans/` |
 | 多 task 编码 / 并行实现 | `orchestration.dispatch` | `orchestration` | `orchestration` | `.ai-runtime-artifacts/execution-logs/` + 代码变更 |
 
 > 上表 Cursor/Claude 列为平台特定绑定摘要；完整绑定见各适配器 `bindings.md`。
-| 验证 / 跑命令证据 | `skills.stage-load` | `superpowers:verification-before-completion` | 同左 | `.ai-runtime-artifacts/verifications/` |
+| 验证 / 跑命令证据 | `skills.stage-load` | `verification-before-completion` | 同左 | `.ai-runtime-artifacts/verifications/` |
 | 代码审查（尾盘/批次） | `orchestration.collective-closeout` | `requesting-code-review` + `code-review-and-quality` | 同左 | `.ai-runtime-artifacts/reviews/` |
 | **批次收尾（尾盘）** | `orchestration.collective-closeout` | `verification-before-completion` → 并行扇出 `requesting-code-review` + `security-and-hardening`（+ `performance-optimization` 按需） | 同左 | `verifications/*-collective-test.md` + `reviews/*-code-review.md` + `reviews/*-security-review.md` + execution-log |
-| 缺陷调查 | `roles.debugger` | `superpowers:systematic-debugging` | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
+| 缺陷调查 | `roles.debugger` | `systematic-debugging` | 同左 | `.ai-runtime-artifacts/specs/` 或 `verifications/` |
 | 验证 / 修复循环 | — | `verification-before-completion` | 同左 + reviewer | `verifications/` + `reviews/` |
 | 架构决策 | — | Task 只读 × 多轮 | 同左 | `.ai-runtime-artifacts/decisions/` |
 | 信息调研 / 网页搜索 | `roles.web-investigator` | web-investigator | Task + web-investigator.md | `.ai-runtime-artifacts/research/` |
@@ -133,7 +133,7 @@
 | 热修 / 提测线 / 合流 / 标签 | — | `git-xywh` + `project.git.md` | 同左 | 无 |
 | Harness 脚手架变更 | — | `git-xywh` chore | 同左 | 与业务 commit 分离 |
 | **发布上线 / Ship Gate（尾盘后）** | `orchestration.ship` | `shipping-and-launch` + `observability-and-instrumentation` | 同左 | `.ai-runtime-artifacts/reviews/*-ship-check.md` + `retros/` |
-| 文档审查 | — | `superpowers:document-review` | 同左 | `.ai-runtime-artifacts/reviews/` |
+| 文档审查 | — | `document-review` | 同左 | `.ai-runtime-artifacts/reviews/` |
 
 ## 按判定加载
 

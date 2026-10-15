@@ -1,6 +1,6 @@
 ---
 artifact: verification
-route: superpowers:verification-before-completion
+route: verification-before-completion
 skills:
   - verification-before-completion
 skills_evidence:

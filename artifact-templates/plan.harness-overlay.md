@@ -1,6 +1,6 @@
 ---
 artifact: implementation-plan
-route: superpowers:writing-plans
+route: writing-plans
 skills:
   - writing-plans
 skills_evidence:

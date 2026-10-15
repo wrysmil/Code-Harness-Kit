@@ -1,6 +1,6 @@
 ---
 artifact: spec
-route: superpowers:brainstorming
+route: brainstorming
 skills:
   - brainstorming
 skills_evidence:

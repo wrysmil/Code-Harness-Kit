@@ -1,6 +1,6 @@
 ---
 artifact: document-review
-route: superpowers:document-review
+route: document-review
 skills:
   - document-review
 skills_evidence:

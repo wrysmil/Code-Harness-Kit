@@ -16,9 +16,9 @@
 **Claude Code 原生 plan 工具（必读）：**
 
 - **禁止**调用 `EnterPlanMode` / `ExitPlanMode`。这两个工具会把 plan 落到 `~/.claude/plans/<auto-name>.md`，**绕开** Harness stage skill 流程、`plan.harness-overlay.md` FM/Next 契约与 `.ai-runtime-artifacts/plans/` 落盘规则，本会话**无门禁拦截**且产物不进 git / FM / `harness-check` 扫描。
-- 写实施计划：Load `superpowers:writing-plans` skill → `artifact-templates/plan.harness-overlay.md` → `Write .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`（并行时另写同 stem `*-dispatch.md`）。
-- 写方案：Load `superpowers:brainstorming` skill → `artifact-templates/spec.harness-overlay.md` → `Write .ai-runtime-artifacts/specs/...`。
-- 误用时回滚：把 `~/.claude/plans/<name>.md` 内容搬到 `.ai-runtime-artifacts/plans/<harness-name>.md` 并补 Harness FM（`route: superpowers:writing-plans`、`skills_evidence`、`## Next`）。
+- 写实施计划：Load `writing-plans` skill → `artifact-templates/plan.harness-overlay.md` → `Write .ai-runtime-artifacts/plans/YYYY-MM-DD-<topic>-plan.md`（并行时另写同 stem `*-dispatch.md`）。
+- 写方案：Load `brainstorming` skill → `artifact-templates/spec.harness-overlay.md` → `Write .ai-runtime-artifacts/specs/...`。
+- 误用时回滚：把 `~/.claude/plans/<name>.md` 内容搬到 `.ai-runtime-artifacts/plans/<harness-name>.md` 并补 Harness FM（`route: writing-plans`、`skills_evidence`、`## Next`）。
 
 **产物落盘（强制）：**
 
