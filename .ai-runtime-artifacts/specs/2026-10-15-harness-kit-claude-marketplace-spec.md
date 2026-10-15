@@ -112,13 +112,23 @@ approved: false
 
 净结果：从 7 步 → 业务项目只需「一份瘦 AGENTS.md」。
 
-## 开放验证点（实现阶段第一步，需真机确认）
+## 目录约定与清单（已由 superpowers 实证确认，2026-10-15）
 
-1. **目录约定**：Claude Code plugin 是否强制仓库根 `skills/`、`agents/`？能否用 `plugin.json` 字段指向
-   `.agents/skills/`、`.agents/agents/`？若都不行 → fallback 方案：新增 `skills → .agents/skills`
-   与 `agents → .agents/agents` 软链，或一次性改名。ponytail 用 `source: "./"` + 根级 `skills/`，倾向
-   需要根级目录约定。
-2. **私有源**：私有 git 仓库能否作为 marketplace 源被 `add`。影响是否需要公开仓库。
+参照可运行的 `obra/superpowers`（同为 `source: "./"` 单仓库 marketplace+plugin）：
+
+- **Claude Code plugin 需顶层 `skills/` 与 `agents/` 目录约定**，`plugin.json` 无 remap 字段。
+  harness-kit 现用 `.agents/skills/`、`.agents/agents/` 作单一真相源，superpowers 自身也同时保留
+  顶层 `skills/` 与 `.agents/`（顶层作 Claude 投影）。→ 本方案新增顶层 `skills/`、`agents/`
+  作为 marketplace 投影目录，`.agents/` 维持真相源，二者用 sync 脚本保持一致。
+- `marketplace.json` 的 `$schema` 字段**可选**（superpowers 未写、ponytail 写了）。
+- `license` 作为**字符串字段写在 `plugin.json`**（值 `MIT`）。
+- 单仓库 = marketplace + plugin 可行：`.claude-plugin/marketplace.json` 与 `.claude-plugin/plugin.json`
+  并存，plugin 条目 `source: "./"`。
+
+## 剩余开放验证点（实现阶段第一步，需真机确认）
+
+1. **私有源**：私有 git 仓库能否作为 marketplace 源被 `add`（可能需 `gh auth`）。影响是否需要公开仓库。
+   先用本地 `--plugin-dir` 模拟验证 plugin 内容可被 Claude Code 发现，再单独验证远程 `add`。
 
 ## 测试策略
 
