@@ -1,3 +1,11 @@
+【精简分支 · 已走 Claude Code marketplace】
+若已执行 `/plugin marketplace add wrysmil/Code-Harness-Kit` 且 `/plugin install code-harness-kit`：
+skills/agents 已由 plugin 全局提供，可跳过下方第 1–4 步（git 元数据清理、投影、本机检查）。业务项目仅需：
+(a) 复制 harness-kit/init/templates/AGENTS.claude-entry.md 到项目根 `AGENTS.md`；
+(b) 首次会话执行第 6 步 profiler 生成四份 project.*。
+其余 `.ai-runtime-artifacts/` 子目录由 Agent 在落盘产物前按需 `mkdir -p` 自建。
+Cursor/Trae 或未使用 marketplace 的场景走下方传统 7 步流程：
+
 请先读取 harness-kit/core/routing.md 和 harness-kit/init/bootstrap.prompt.md。
 这是一个新项目刚接入 Agent Harness，请按 Harness 初始化流程处理：
 1. 清理 harness-kit/ 随仓库携带的 git 元数据，并更新项目根 .gitignore：删除 harness-kit/.git/（以及存在的 .gitignore / .gitattributes / .gitmodules；不要动项目自身的 .git/），在项目根 .gitignore 追加（保留已有内容） `harness-kit/*` 和 `.ai-runtime-artifacts/` 两条。
